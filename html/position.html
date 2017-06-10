@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>自己做着玩</title>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+
+
+  <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=0339a9e4f17c228650d6a412aa9b07c7&plugin=AMap.PolyEditor,AMap.CircleEditor"></script>
+
+
+</head>
+
+<body style="opacity:0;transition:opacity .5s">
+  <nav class="navbar navbar-default text-center state-bar" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="#"><i class="glyphicon glyphicon-exclamation-sign navbar-return"></i></a>
+        <span class="navbar-text navbar-title clearfloat">小明</span>
+      </div>
+    </div>
+  </nav>
+  <div class="btn-group-vertical toolbar">
+    <button type="button" id="track" class="btn btn-default">轨迹</button>
+    <button type="button" id="fence" class="btn btn-default" data-toggle="modal" data-target="#fenceModal">围栏</button>
+    <button type="button" class="btn btn-default">追踪</button>
+    <button type="button" id="center" class="btn btn-default">定位</button>
+  </div>
+  <button id='circleConfirm' class='btn btn-warning circleConfirm'>确定</button>
+  <div id="container" style="width:100%; height:92%"></div>
+
+
+
+  <!-- 模态框（Modal） -->
+  <div class="modal fade" id="fenceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+              <span id="fenceAdd">添加</span>
+              <h4 class="modal-title" id="myModalLabel">电子围栏</h4>
+        </div>
+        <div class="modal-body">
+
+        </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+  </div>
+
+
+  <div id="fenceAddAlert" class="alert alert-danger">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>请在地图上画出圆形围栏区域</strong>
+    </div>
+
+  <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script>
+  var imei = {imei:"18523852976"};
+  $.ajax({
+     url: 'http://edu.winsaf.com:9999/loc/location/latestLocation',
+     type: "POST",
+     contentType: "application/json",
+     data:JSON.stringify(imei),
+     success: function(data){
+      console.log(data);
+
+     },
+     error:function(){
+
+      console.log(data);
+     }
+    });
+  //地图初始化
+  var map = new AMap.Map('container', {
+    resizeEnable: true,
+    center: [106.474281,29.520676],
+    zoom: 13,
+    mapStyle:'amap://styles/normal'
+  });
+  $(function() {
+    $("body").css("opacity", 1);
+
+
+
+
+  });
+
+
+  //电子围栏添加
+  $("#fenceAdd").click(function(){
+    map.clearMap();
+    $("#fenceModal").modal("hide");
+    $("#fenceAddAlert").fadeIn(500);
+    setTimeout(function(){
+      $("#fenceAddAlert").fadeOut(500);
+    },3000);
+    var editor = {};
+    editor._circle = (function(){
+        var center = map.getCenter();
+
+        var circle = new AMap.Circle({
+            center: [center.lng, center.lat],// 圆心位置
+            radius: 600, //半径
+            strokeColor: "#F33", //线颜色
+            strokeOpacity: 1, //线透明度
+            strokeWeight: 3, //线粗细度
+            fillColor: "#ee2200", //填充颜色
+            fillOpacity: 0.35//填充透明度
+        });
+        circle.setMap(map);
+        return circle;
+    })();
+    map.setFitView();
+
+    editor._circleEditor = new AMap.CircleEditor(map, editor._circle);
+    editor._circleEditor.open();
+    //$(".amap-marker-label").before("<button id='circleConfirm' class='btn btn-default circleConfirm'>确定</button>");
+    $("#circleConfirm").click(function() {
+      editor._circleEditor.close();
+      $("#circleConfirm").fadeOut(100);
+    });
+
+
+    $("#circleConfirm").fadeIn(100);
+
+
+
+
+  });
+
+
+  $("#center").click(function(){
+    var center = map.getCenter()
+      console.log(center);
+      console.log(center.lng);
+      console.log(center.lat);
+
+  });
+
+
+
+  var lineArr = [
+    [106.464963,29.502196],
+    [106.465182,29.502149],
+    [106.46522,29.502943],
+    [106.464598,29.503204],
+    [106.464743,29.503844],
+    [106.464287,29.5039],
+    [106.464292,29.506318],
+    [106.462516,29.506925],
+    [106.462554,29.51024],
+    [106.471107,29.512952],
+    [106.470163,29.514372],
+    [106.469219,29.516706],
+    [106.47836,29.521878],
+    [106.482651,29.523708],
+    [106.483617,29.522326],
+    [106.486578,29.52283],
+    [106.487908,29.523428],
+    [106.486943,29.525743],
+    [106.486943,29.525743],
+  ];
+
+
+
+  //画轨迹
+  $("#track").click(function(){
+
+      map.clearMap();
+      var polyline = new AMap.Polyline({
+        path: lineArr, //设置线覆盖物路径
+        strokeColor: "#3366FF", //线颜色
+        strokeOpacity: 1, //线透明度
+        strokeWeight: 6, //线宽
+        strokeStyle: "dashed ", //线样式
+        lineJoin:"round",
+        strokeDasharray: [10,2,10] , //补充线样式
+        showDir:true
+      });
+      var marker = new AMap.Marker({
+          map: map,
+          position: [106.464412, 29.502159],
+          icon: "http://webapi.amap.com/images/car.png",
+          content:"<i class='fa fa-blind fa-2x'></i>",
+          offset: new AMap.Pixel(-10, -13),
+          autoRotation: false
+      });
+      marker.setMap(map);
+      polyline.setMap(map);
+    //标记点
+
+
+      marker.moveAlong(lineArr,1500);
+  });
+
+
+
+
+
+  // setTimeout(function() {
+  //   lineArr.push([106.490955,29.525593]);
+  //   polyline.setPath(lineArr);
+  //   polyline.setMap(map);
+  // }, 3000);
+
+
+
+  //工具栏
+  map.plugin(["AMap.ToolBar", 'AMap.Scale', 'AMap.MapType'], function() {
+    map.addControl(new AMap.ToolBar());
+
+    map.addControl(new AMap.Scale());
+
+    map.addControl(new AMap.MapType());
+  });
+
+
+function circleConfirm(){
+  alert("a");
+
+}
+
+</script>
+</body>
+
+</html>

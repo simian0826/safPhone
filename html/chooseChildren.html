@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛丰智能学生卡</title>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/common.css">
+
+  <script data-main="/safPhone/js/requireConfig" src="/safPhone/js/require.js"></script>
+</head>
+
+<body>
+  <!--导航条 -->
+  <nav class="navbar navbar-default text-center navbar-hasList" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="login.html"><i class="fa fa-angle-left fa-2x navbar-return"></i></a>
+        <span class="navbar-text navbar-title">选择小孩</span>
+      </div>
+    </div>
+  </nav>
+  <div id="chooseContent">
+    <a href="#" class="list-group-item">小明<small>12345678</small></a><a class="unbind">解绑</a>
+    <a href="#" class="list-group-item">小红<small>12345678</small></a><a class="unbind">解绑</a>
+    <a href="#" class="list-group-item">小茂<small>12345678</small></a><a class="unbind">解绑</a>
+    <a href="#" class="list-group-item">小智<small>12345678</small></a><a class="unbind">解绑</a>
+    <a href="#" class="list-group-item">小姨<small>12345678</small></a><a class="unbind">解绑</a>
+    <a href="addChild.html" class="list-group-item addChild"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;添加小孩</a>
+  </div>
+
+  <div id="childrenEmpty" class="text-center">
+    <p id="emptyInfo">您还没有关联你的孩子信息，可通过学生卡设备序列号关联孩子信息。</p>
+    <a href="addChild.html">
+      <p>创建关联</p>
+    </a>
+  </div>
+
+
+
+
+
+
+  <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script>
+    var childrenList = 0;
+    if (childrenList == 1) {
+      $("body").css("background-color", "#eee");
+      $("#childrenEmpty").fadeIn(1000);
+
+    } else {
+      $("#chooseContent").fadeIn(1000);
+    }
+  </script>
+</body>
+
+</html>
