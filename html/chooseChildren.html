@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/common.css">
 
-  <script data-main="/safPhone/js/requireConfig" src="/safPhone/js/require.js"></script>
+
 </head>
 
 <body>
@@ -19,18 +19,13 @@
   <nav class="navbar navbar-default text-center navbar-hasList" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="login.html"><i class="fa fa-angle-left fa-2x navbar-return"></i></a>
+
         <span class="navbar-text navbar-title">选择小孩</span>
       </div>
     </div>
   </nav>
   <div id="chooseContent">
-    <a href="#" class="list-group-item">小明<small>12345678</small></a><a class="unbind">解绑</a>
-    <a href="#" class="list-group-item">小红<small>12345678</small></a><a class="unbind">解绑</a>
-    <a href="#" class="list-group-item">小茂<small>12345678</small></a><a class="unbind">解绑</a>
-    <a href="#" class="list-group-item">小智<small>12345678</small></a><a class="unbind">解绑</a>
-    <a href="#" class="list-group-item">小姨<small>12345678</small></a><a class="unbind">解绑</a>
-    <a href="addChild.html" class="list-group-item addChild"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;添加小孩</a>
+
   </div>
 
   <div id="childrenEmpty" class="text-center">
@@ -41,22 +36,123 @@
   </div>
 
 
+  <div class="modal fade" id="unbindConfirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+              确定要解除绑定？
+              <button id="unbindSubmit" type="button" class="btn btn-primary">解除绑定</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+
+            </div>
+
+
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 
 
 
-  <script src="/safPhone/js/jquery.js"></script>
-  <script src="/safPhone/js/bootstrap.min.js"></script>
-  <script>
-    var childrenList = 0;
-    if (childrenList == 1) {
-      $("body").css("background-color", "#eee");
-      $("#childrenEmpty").fadeIn(1000);
 
-    } else {
-      $("#chooseContent").fadeIn(1000);
-    }
-  </script>
+
+<script src="/safPhone/js/jquery.js"></script>
+<script src="/safPhone/js/jquery.cookie.js"></script>
+<script src="/safPhone/js/bootstrap.min.js"></script>
+
+<script>
+  var childLength = $.cookie("childLength");
+  var phoneNumber = $.cookie("phoneNumber");
+  var password = $.cookie("password");
+  var token = $.cookie("token");
+  var userID = $.cookie("userID");
+  var unbindChildID = "";
+  var user = {
+    "phoneNumber" : phoneNumber,
+    "password" : password
+
+  }
+
+  if (childLength == 0) {
+    $("body").css("background-color", "#eee");
+    $("#childrenEmpty").fadeIn(1000);
+
+  } else {
+    $.ajax({
+       url: 'http://edu.winsaf.com:9999/edu/login/login',
+       type: "POST",
+       contentType: "application/json",
+       data:JSON.stringify(user),
+       success: function(data){
+          console.log(data);
+          if(data.rspCode == 1){
+
+            for(var i = 0, j = data.childList.length; i < j; i++){
+              appendChild(data.childList[i]);
+            }
+            $(".children-item").click(function(){
+              $.cookie("deviceID", $(this).children("small").html());
+              $.cookie("childID", $(this).attr("name"));
+
+            });
+            $("#chooseContent").append("<a href='addChild.html' class='list-group-item addChild'><i class='fa fa-plus-circle fa-lg'></i>&nbsp;添加小孩</a>");
+            $(".unbind").click(function(){
+              console.log($(this).siblings());
+            unbindChildID = $($(this).siblings()[0]).attr("name")
+            });
+
+            $("#unbindSubmit").click(function(){
+              $.ajax({
+                 url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/unbindDevice',
+                 type: "POST",
+                 contentType: "application/json",
+                 headers: {
+                        "token" : $.cookie("token"),
+                        "userID" : $.cookie("userID")
+                    },
+                 data:JSON.stringify({childID : unbindChildID}),
+                 success: function(data){
+                    console.log(data);
+                    if(data.rspCode == 1){
+                      alert("解绑成功");
+                      window.location.href="chooseChildren.html";
+                    }else {
+                      alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+                    }
+                 },
+                 error:function(data){
+                   console.log(data);
+                  alert("解绑错误！请将下列信息提供给管理人员" + data);
+                 }
+               });//ajax end
+            });
+
+
+          }else {
+
+          }
+       },
+       error:function(data){
+         console.log(data);
+        alert("提交失败！请将下列信息提供给管理人员" + data);
+
+
+       }
+      });
+    $("#chooseContent").fadeIn(1000);
+
+
+
+  }
+
+
+  function appendChild(child){
+    $("#chooseContent").append("<div><a href='main.html' name='"+ child.childID +"' class='list-group-item children-item'><span>" + child.name + "</span><small>" + child.deviceID  + "</small></a><a class='unbind' data-toggle='modal' data-target='#unbindConfirmModal'>解绑</a></div>");
+  }
+
+</script>
 </body>
 
 </html>

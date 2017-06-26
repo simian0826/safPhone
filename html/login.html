@@ -8,7 +8,7 @@
 	<title>赛丰智能学生卡</title>
 	<link rel="stylesheet" type="text/css" href="../css/initialize.css">
 	<link rel="stylesheet" type="text/css" href="../css/login.css">
-	<script data-main="../js/requireConfig" src="../js/require.js"></script>
+
 </head>
 
 <body>
@@ -52,8 +52,9 @@
 		</div>
 	</div>
 
-	<script src="../js/jquery.js"></script>
-	<script src="../js/bootstrap.min.js"></script>
+	<script src="/safPhone/js/jquery.js"></script>
+	<script src="/safPhone/js/jquery.cookie.js"></script>
+	<script src="/safPhone/js/bootstrap.min.js"></script>
 	<script>
 		$('#login-button').click(function (event) {
 			event.preventDefault();
@@ -63,28 +64,42 @@
 						password :	$('#password').val()
 				};
 				$.ajax({
-					 url: 'http://61.128.208.26:9009/vehLogin/login',
+					 url: 'http://edu.winsaf.com:9999/edu/login/login',
 					 type: "POST",
 					 contentType: "application/json",
 					 data:JSON.stringify(user),
 					 success: function(data){
 							console.log(data);
-
+							if(data.rspCode == 1){
+								$('#welcome-text').html('您好，' + $('#username').val());
+								$('form').fadeOut(500);
+								$('.wrapper').addClass('form-success');
+								var childLength = 0;
+								if(data.childList){
+									childLength = 1;
+								}
+								$.cookie("phoneNumber",user.phoneNumber, { path: "/"});
+								$.cookie("password",user.password, { path: "/"});
+								$.cookie("childLength",childLength, { path: "/"});
+								$.cookie("token",data.token, { path: "/"});
+								$.cookie("userID",data.userID, { path: "/"});
+								setTimeout(function(){
+									window.location.href="chooseChildren.html";
+								},1000);
+							}else {
+								alert("用户名或密码不正确！");
+							}
 					 },
-					 error:function(){
-
-						alert("提交失败！");
+					 error:function(data){
+						 console.log(data);
+						alert("提交失败！请将下列信息提供给管理人员" + data);
 
 
 					 }
 					});
 
-					$('#welcome-text').html('您好，' + $('#username').val());
-					$('form').fadeOut(500);
-					$('.wrapper').addClass('form-success');
-					// setTimeout(function(){
-					// 	window.location.href="chooseChildren.html";
-					// },1000);
+
+
 
 			}else{
 
