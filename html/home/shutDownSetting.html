@@ -14,7 +14,6 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
 
-  <script data-main="/safPhone/js/requireConfig" src="/safPhone/js/require.js"></script>
 </head>
 
 <body style="opacity:0;transition:opacity .5s">
@@ -29,40 +28,114 @@
 
 
   <div class="mine-list">
-    <a href="incomingNumSetting.html" class="list-group-item">
+    <li  class="list-group-item">
 
     <span class="list-item-content-normal">定时开关机</span>
 
-      <input class="mui-switch mui-switch-anim pull-right" type="checkbox">
-    </a>
+      <input id="swithButton" class="mui-switch mui-switch-anim pull-right" type="checkbox">
+    </li>
   </div>
 
   <div class="mine-list">
-    <a href="#" class="list-group-item">
-
+    <li class="list-group-item">
+      <input id="startUp" type="time" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"/>
     <span class="list-item-content-normal">开机时间</span>
 
       <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
-    </a>
+
+    </li>
 
   </div>
 
   <div class="mine-list">
-    <a href="#" class="list-group-item">
-
+    <li class="list-group-item">
+      <input id="shutDown" type="time" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"/>
     <span class="list-item-content-normal">关机时间</span>
 
       <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
-    </a>
+    </li>
 
   </div>
+  <div class="text-center">
+      <button id="saveTiming" type="button" class="btn btn-default submit">保存</button>
+  </div>
+
+
+
 
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
 <script>
   $(function(){
     $("body").css("opacity",1);
-    $(".mui-switch").attr("checked","true");
+
+
+    $.ajax({
+       url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getTimingSwitch',
+       type: "POST",
+       contentType: "application/json",
+       headers: {
+              "token" : $.cookie("token"),
+              "userID" : $.cookie("userID")
+          },
+       data:JSON.stringify({deviceID : $.cookie("deviceID")}),
+       success: function(data){
+          console.log(data);
+
+          $("#startUp").val(data.powerOnTime);
+          $("#shutDown").val(data.powerOffTime);
+          if(data.enable == 1){
+            $(".mui-switch").attr("checked",true);
+          }else {
+            $(".mui-switch").attr("checked",false);
+          }
+
+       },
+       error:function(XMLHttpRequest, textStatus, errorThrown){
+         console.log(XMLHttpRequest);
+         console.log(textStatus);
+         console.log(errorThrown);
+        alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+       }
+     });//ajax end
+     $(".list-group-item").click(function(){
+       $(this).children("input").focus();
+     });
+
+    //保存设定
+    $("#saveTiming").click(function(){
+      var timingJson = {
+        deviceID : $.cookie("deviceID"),
+        powerOnTime : $("#startUp").val(),
+        powerOffTime : $("#shutDown").val(),
+        enable : $("#swithButton").is(":checked")?1:2
+      };
+      console.log($("#swithButton").val());
+      console.log(timingJson);
+      $.ajax({
+         url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/saveTimingSwitch',
+         type: "POST",
+         contentType: "application/json",
+         headers: {
+                "token" : $.cookie("token"),
+                "userID" : $.cookie("userID")
+            },
+         data:JSON.stringify(timingJson),
+         success: function(data){
+            console.log(data);
+
+         },
+         error:function(XMLHttpRequest, textStatus, errorThrown){
+           console.log(XMLHttpRequest);
+           console.log(textStatus);
+           console.log(errorThrown);
+          alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+         }
+       });//ajax end
+    });
+
+
   });
 </script>
 

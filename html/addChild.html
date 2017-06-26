@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/common.css">
 
-  <script data-main="/safPhone/js/requireConfig" src="/safPhone/js/require.js"></script>
+
 </head>
 
 <body>
@@ -29,7 +29,7 @@
   <form class="form-horizontal form-addChild" role="form">
     <h5 class="text-center">请输入设备背面的15位IMEI号码</h5>
     <div class="form-input-group  form-input-group-addChild text-center">
-      <input class="form-input form-input-addChild" placeholder="请输入设备序列号" />
+      <input id="deviceID" class="form-input form-input-addChild" placeholder="请输入设备序列号" />
     </div>
 
     <div class="form-input-group text-center">
@@ -43,10 +43,35 @@
 
 
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
   <script>
     $("#submit").click(function(){
-    location.href = "chooseChildren.html"
+      $.ajax({
+         url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/bindDevice',
+         type: "POST",
+         contentType: "application/json",
+         headers: {
+                "token" : $.cookie("token"),
+                "userID" : $.cookie("userID")
+            },
+         data:JSON.stringify({deviceID : $("#deviceID").val()}),
+         success: function(data){
+            console.log(data);
+            if(data.rspCode == 1){
+              alert("绑定成功");
+              window.location.href="chooseChildren.html";
+            }else {
+              alert("绑定失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            }
+         },
+         error:function(data){
+           console.log(data);
+          alert("注册错误！请将下列信息提供给管理人员" + data);
+         }
+       });//ajax end
+
+
     });
   </script>
 </body>

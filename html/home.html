@@ -46,7 +46,7 @@
   <div class="content-list col-xs-12">
     <h6 class="list-title ">设备管理</h6>
     <div class="col-xs-3 col-sm-2 content-item">
-      <a href="tel:13212302503"><i class="fa fa-phone fa-2x"></i><p>通话</p></a>
+      <a id="call" href="tel:13212302503"><i class="fa fa-phone fa-2x"></i><p>通话</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 content-item">
       <a href="home/guardianship.html"><i class="fa fa-child fa-2x"></i><p>监护设置</p></a>
@@ -96,9 +96,11 @@
 </div>
 
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
 <script>
   $(function(){
+    var childID = $.cookie("childID");
     $("body").css("opacity",1);
 
     $(".schoolService").click(function(){
@@ -108,6 +110,31 @@
         $("#schoolAlert").fadeOut(500);
       },2000);
     });
+
+    $.ajax({
+       url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getChildInfo',
+       type: "POST",
+       contentType: "application/json",
+       headers: {
+              "token" : $.cookie("token"),
+              "userID" : $.cookie("userID")
+          },
+       data:JSON.stringify({childID : childID}),
+       success: function(data){
+          console.log(data);
+          if(data.rspCode == 1){
+            $("#call").attr("href", "tel:" + data.phoneNumber);
+
+          }else {
+            alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          }
+
+       },
+       error:function(data){
+         console.log(data);
+        alert("解绑错误！请将下列信息提供给管理人员" + data);
+       }
+     });//ajax end
   });
 </script>
 

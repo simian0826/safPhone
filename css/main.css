@@ -73,6 +73,12 @@ a, a:visited, a:focus, a:hover{
 }
 
 
+.submit {
+  width: 250px;
+  background-color: #24C4C6;
+  color: #fff;
+  
+}
 
 .active a{
   color:#24C4C6 !important;
