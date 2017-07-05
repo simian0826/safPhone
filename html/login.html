@@ -55,13 +55,14 @@
 	<script src="/safPhone/js/jquery.js"></script>
 	<script src="/safPhone/js/jquery.cookie.js"></script>
 	<script src="/safPhone/js/bootstrap.min.js"></script>
+	<script src="/safPhone/js/md5.js"></script>
 	<script>
 		$('#login-button').click(function (event) {
 			event.preventDefault();
 			if($('#username').val() != '' && $('#password').val() != ''){
 				var user = {
 						phoneNumber : $('#username').val(),
-						password :	$('#password').val()
+						password :	hex_md5($('#password').val())
 				};
 				$.ajax({
 					 url: 'http://edu.winsaf.com:9999/edu/login/login',

@@ -62,6 +62,7 @@
 <script src="/safPhone/js/jquery.js"></script>
 <script src="/his/js/jquery.cookie.js"></script>
 <script src="/safPhone/js/bootstrap.min.js"></script>
+<script src="/safPhone/js/md5.js"></script>
 <script>
 
 $(function(){
@@ -117,7 +118,7 @@ $(function(){
         var registerJson = {
           phoneNumber : $("#phoneNumber").val(),
           verifyCode : $("#verifyCode").val(),
-          password : $("#password").val(),
+          password : hex_md5($('#password').val())
         };
         $.ajax({
            url: 'http://edu.winsaf.com:9999/edu/login/register',
