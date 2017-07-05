@@ -118,7 +118,11 @@ $(function(){
         var registerJson = {
           phoneNumber : $("#phoneNumber").val(),
           verifyCode : $("#verifyCode").val(),
+<<<<<<< HEAD
           password : hex_md5($('#password').val())
+=======
+          password : $("#password").val(),
+>>>>>>> 5cc609fbc5149eb33e3d9150b19b3f7fdfae909e
         };
         $.ajax({
            url: 'http://edu.winsaf.com:9999/edu/login/register',
