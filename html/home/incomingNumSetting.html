@@ -31,15 +31,18 @@
 
     <div class="form-group">
     <label for="name">姓名</label>
-    <input type="text" class="form-input" id="name" placeholder="请输入姓名">
+    <input type="text" class="form-input" id="description" placeholder="请输入姓名">
     </div>
 
     <div class="form-group">
     <label for="name">号码</label>
-    <input type="text" class="form-input" id="name" placeholder="请输入号码">
+    <input type="text" class="form-input" id="phoneNumber" placeholder="请输入号码">
     </div>
 
-    <button class="saveNum btn">保存</button>
+    <div class="btn-panel">
+      <button type="button" id="submit" class="oprateBtn btn">保存</button>
+
+    </div>
 
 
   </form>
@@ -47,11 +50,99 @@
 
   </div>
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/getUrlParams.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
 <script>
-  $(function(){
+var incomingNumId = getUrlParams("id");
+var phoneNumber = getUrlParams("phoneNumber");
+var description = decodeURI(getUrlParams("description"));
+var url, requestDate;
+$(function(){
     $("body").css("opacity",1);
-  });
+    if (incomingNumId != null && incomingNumId != "") {
+      $("#description").val(description);
+      $("#phoneNumber").val(phoneNumber);
+      url = "http://edu.winsaf.com:9999/edu/deviceMgmt/updateWhiteList";
+      $("#submit").after('<button type="button" id="delete" class="oprateBtn btn">删除</button>');
+
+    }else {
+      url = "http://edu.winsaf.com:9999/edu/deviceMgmt/saveWhiteList";
+    }
+
+
+});
+
+
+$("#submit").click(function(){
+
+
+    requestDate = {
+      id:incomingNumId,
+      deviceID: $.cookie("deviceID"),
+      phoneNumber: $("#phoneNumber").val(),
+      description: $("#description").val()
+    };
+
+  $.ajax({
+     url: url,
+     type: "POST",
+     contentType: "application/json",
+     headers: {
+            "token" : $.cookie("token"),
+            "userID" : $.cookie("userID")
+        },
+     data:JSON.stringify(requestDate),
+     success: function(data){
+        console.log(data);
+        if(data.rspCode == 1){
+          window.history.go(-1);
+        }else {
+          alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+        }
+
+     },
+     error:function(data){
+       console.log(data);
+      alert("程序错误！请将下列信息提供给管理人员" + data);
+     }
+   });//ajax end
+
+});
+$(".btn-panel").on("click", "#delete", function(){
+
+    url = "http://edu.winsaf.com:9999/edu/deviceMgmt/deleteWhiteList";
+    requestDate = {
+      id:incomingNumId,
+      deviceID: $.cookie("deviceID"),
+    };
+
+  $.ajax({
+     url: url,
+     type: "POST",
+     contentType: "application/json",
+     headers: {
+            "token" : $.cookie("token"),
+            "userID" : $.cookie("userID")
+        },
+     data:JSON.stringify(requestDate),
+     success: function(data){
+        console.log(data);
+        if(data.rspCode == 1){
+          window.history.go(-1);
+        }else {
+          alert("删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
+        }
+
+     },
+     error:function(data){
+       console.log(data);
+      alert("程序错误！请将下列信息提供给管理人员" + data);
+     }
+   });//ajax end
+
+});
+
 </script>
 
 </body>

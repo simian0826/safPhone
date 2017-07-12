@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
 
-  <script data-main="/safPhone/js/requireConfig" src="/safPhone/js/require.js"></script>
+
 </head>
 
 <body style="opacity:0;transition:opacity .5s">
@@ -27,45 +27,58 @@
   </nav>
 
 
-  <div class="mine-list">
-    <a href="incomingNumSetting.html" class="list-group-item guardianship-list-item">
-      <div class="icon-squal more-nubmer-icon">
-      <i class="fa fa-user fa-2x guardianship-list-icon"></i>
-    </div>
-    <span class="guardianship-name">小明</span>
-    <span class="guardianship-number">13212302503</span>
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
-    </a>
-    <a href="incomingNumSetting.html" class="list-group-item guardianship-list-item">
-      <div class="icon-squal more-nubmer-icon">
-      <i class="fa fa-user fa-2x guardianship-list-icon"></i>
-    </div>
-    <span class="guardianship-name">小明</span>
-    <span class="guardianship-number">13212302503</span>
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
-    </a>
-    <a href="incomingNumSetting.html" class="list-group-item guardianship-list-item">
-      <div class="icon-squal more-nubmer-icon">
-      <i class="fa fa-user fa-2x guardianship-list-icon"></i>
-    </div>
-    <span class="guardianship-name">小明</span>
-    <span class="guardianship-number">13212302503</span>
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
-    </a>
+  <div id="listPanel" class="mine-list">
+
   </div>
 
-  <a href="incomingNumSetting.html"><button class="saveNum btn"><i class="fa fa-plus fa-lg"></i> 添加号码</button></a>
+  <a href="incomingNumSetting.html"><button type="button" class="saveNum btn"><i class="fa fa-plus fa-lg"></i> 添加号码</button></a>
 
 
 
 
   </div>
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
 <script>
   $(function(){
     $("body").css("opacity",1);
+
+    $.ajax({
+       url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getWhiteList',
+       type: "POST",
+       contentType: "application/json",
+       headers: {
+              "token" : $.cookie("token"),
+              "userID" : $.cookie("userID")
+          },
+       data:JSON.stringify({deviceID : $.cookie("deviceID")}),
+       success: function(data){
+
+          console.log(data);
+          if(data.rspCode == 1){
+            if(data.list != null){
+              for(var i = 0; i < data.list.length; i++){
+                incomingNumItemCreate(data.list[i]);
+              }
+            }
+
+          }else {
+            alert("获取白名单失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          }
+
+       },
+       error:function(data){
+         console.log(data);
+        alert("获取错误！请将下列信息提供给管理人员" + data);
+       }
+     });//ajax end
   });
+
+function incomingNumItemCreate(data) {
+  var href = "incomingNumSetting.html?id=" + data.id + "&phoneNumber=" + data.phoneNumber + "&description=" + encodeURI(encodeURI(data.description));
+  $("#listPanel").append('<a href="' + href + '" class="list-group-item guardianship-list-item"><div class="icon-squal more-nubmer-icon"><i class="fa fa-user fa-2x guardianship-list-icon"></i></div><span class="guardianship-name">' + data.description + '</span><span class="guardianship-number" name="' + data.id + '">' + data.phoneNumber + '</span></a>');
+}
 </script>
 
 </body>

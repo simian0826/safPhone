@@ -26,43 +26,49 @@
   </nav>
 
   <div class="mine-list">
-    <a href="incomingNumSetting.html" class="list-group-item guardianship-list-item">
+    <a href="javascript:void(0)" class="list-group-item guardianship-list-item">
       <div class="icon-squal">
         <i class="fa fa-user fa-2x guardianship-list-icon"></i>
         <span class="num-button">按键1</span>
       </div>
       <div class="guardianship-content">
-        <span class="guardianship-name">小明</span>
-        <span class="guardianship-number">13212302503</span>
+        <span id="guardianshipName1" class="guardianship-name"></span>
+        <span id="guardianshipNumber1" class="guardianship-number"></span>
       </div>
 
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
+      
 
     </a>
-    <a href="#" class="list-group-item guardianship-list-item">
+    <a href="javascript:void(0)" class="list-group-item guardianship-list-item">
       <div class="icon-squal">
         <i class="fa fa-user fa-2x guardianship-list-icon"></i>
         <span class="num-button">按键2</span>
       </div>
       <div class="guardianship-content">
-        <span class="guardianship-name">小明</span>
-        <span class="guardianship-number">13212302503</span>
+        <span id="guardianshipName2" class="guardianship-name"></span>
+        <span id="guardianshipNumber2" class="guardianship-number"></span>
       </div>
 
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
+
 
     </a>
-    <a href="#" class="list-group-item guardianship-list-item">
+    <a href="javascript:void(0)" class="list-group-item guardianship-list-item">
       <div class="icon-squal">
         <i class="fa fa-user fa-2x guardianship-list-icon"></i>
         <span class="num-button">按键3</span>
       </div>
       <div class="guardianship-content">
-        <span class="guardianship-name">小明</span>
-        <span class="guardianship-number">13212302503</span>
+        <span id="guardianshipName3" class="guardianship-name"></span>
+        <span id="guardianshipNumber3" class="guardianship-number"></span>
       </div>
 
-      <i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i>
+
+
+    </a>
+    <a id="guardNumberSetting.html" href="guardNumberSetting.html" class="list-group-item text-center " >
+    <span class="list-item-content-setting">设置监护号码</span>
+
+
 
     </a>
 
@@ -83,17 +89,67 @@
 
   </div>
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
-  <script src="/safPhone/js/md5.js"></script>
+
 <script>
   $(function(){
     $("body").css("opacity",1);
-<<<<<<< HEAD
+    var deviceID = $.cookie("deviceID");
+    $.ajax({
+       url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getGuardSetting',
+       type: "POST",
+       contentType: "application/json",
+       headers: {
+              "token" : $.cookie("token"),
+              "userID" : $.cookie("userID")
+          },
+       data:JSON.stringify({deviceID : deviceID}),
+       success: function(data){
+          console.log(data);
+          if(data.rspCode == 1){
+            var guardData = data;
+            if(guardData.guardName1 == null || guardData.guardName1 == ""){
+                guardData.guardName1 = "未设置";
+            }
+            if(guardData.guardName2 == null || guardData.guardName2 == ""){
+                guardData.guardName2 = "未设置";
+            }
+            if(guardData.guardName3 == null || guardData.guardName3 == ""){
+                guardData.guardName3 = "未设置";
+            }
+            if(guardData.guardNumber1 == null || guardData.guardNumber1 == ""){
+                guardData.guardNumber1 = "";
+            }
+            if(guardData.guardNumber2 == null || guardData.guardNumber2 == ""){
+                guardData.guardNumber2 = "";
+            }
+            if(guardData.guardNumber3 == null || guardData.guardNumber3 == ""){
+                guardData.guardNumber3 = "";
+            }
+            $("#guardianshipName1").text(data.guardName1);
+            $("#guardianshipNumber1").text(data.guardNumber1);
+            $("#guardianshipName2").text(data.guardName2);
+            $("#guardianshipNumber2").text(data.guardNumber2);
+            $("#guardianshipName3").text(data.guardName3);
+            $("#guardianshipNumber3").text(data.guardNumber3);
 
-=======
-    
->>>>>>> 5cc609fbc5149eb33e3d9150b19b3f7fdfae909e
+
+          }else {
+            alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          }
+
+       },
+       error:function(data){
+         console.log(data);
+        alert("解绑错误！请将下列信息提供给管理人员" + data);
+       }
+     });//ajax end
+
+
   });
+
+
 </script>
 
 </body>

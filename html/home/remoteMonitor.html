@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="x-rim-auto-match" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>赛丰智能学生卡</title>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+
+
+</head>
+
+<body style="opacity:0;transition:opacity .5s">
+  <nav class="navbar navbar-default text-center state-bar" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="javascript:window.history.go(-1)"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
+        <span class="navbar-text navbar-title clearfloat">远程监听</span>
+      </div>
+    </div>
+  </nav>
+
+
+  <form class="form text-center" role="form">
+
+
+    <span class="info-span">设备将在两分钟后向你回拨电话，注意接听</span>
+    <div class="form-group text-center">
+    <input type="text" style="background-color:#fff" class="form-input" id="phoneNumber" placeholder="请输入回拨号码">
+    </div>
+
+
+
+      <button type="button" id="submit" class="saveNum btn">监听</button>
+
+
+
+
+  </form>
+
+
+  </div>
+  <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/getUrlParams.js"></script>
+  <script src="/safPhone/js/jquery.cookie.js"></script>
+  <script src="/safPhone/js/bootstrap.min.js"></script>
+<script>
+
+$(function(){
+    $("body").css("opacity",1);
+
+});
+
+$("#submit").click(function(){
+   var requestData = {
+      deviceID: $.cookie("deviceID"),
+      phoneNumber: $("#phoneNumber").val()
+    };
+  $.ajax({
+     url: "http://edu.winsaf.com:9999/edu/deviceMgmt/remoteMonitor",
+     type: "POST",
+     contentType: "application/json",
+     headers: {
+            "token" : $.cookie("token"),
+            "userID" : $.cookie("userID")
+        },
+     data:JSON.stringify(requestData),
+     success: function(data){
+        console.log(data);
+        if(data.rspCode == 1){
+          alert("设备将在两分钟后向" + $("#phoneNumber").val() + "回拨");
+        }else if (data.rspCode == 2242){
+          alert("未找到设备");
+        }else if (data.rspCode == 2243){
+          alert("设备不在线");
+        }else {
+          alert("监听失败！请将下列信息提供给管理人员" + data.rspCode);
+        }
+
+     },
+     error:function(data){
+       console.log(data);
+      alert("程序错误！请将下列信息提供给管理人员" + data);
+     }
+   });//ajax end
+
+});
+
+
+</script>
+
+</body>
+
+</html>

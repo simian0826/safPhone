@@ -191,8 +191,9 @@ select::selection {
   position: fixed;
   bottom: 5px;
   color: #24C4C6;
-  font-size: 15px;
+  font-size: 18px;
   text-decoration: none;
+  z-index: 999;
 }
 
 #register {

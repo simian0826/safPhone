@@ -21,7 +21,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a href="javascript:window.history.go(-1)"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
-        <span class="navbar-text navbar-title clearfloat">定时开关机</span>
+        <span class="navbar-text navbar-title clearfloat">闹钟设定</span>
       </div>
     </div>
   </nav>
@@ -123,7 +123,7 @@
             },
          data:JSON.stringify(timingJson),
          success: function(data){
-          alert("保存成功");
+            console.log(data);
 
          },
          error:function(XMLHttpRequest, textStatus, errorThrown){
