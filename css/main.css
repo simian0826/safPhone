@@ -300,7 +300,7 @@ a, a:visited, a:focus, a:hover{
 }
 
 .oprateBtn:first-child {
-    background-color: #24C4C6;
+    background-color: #24C4C6 !important;
 }
 
 .oprateBtn:last-child{
@@ -316,6 +316,60 @@ a, a:visited, a:focus, a:hover{
 /* powerSaving */
 
 /* powerSaving end*/
+
+/* alarmSetting */
+.time-input{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+}
+
+.alarm-list-item{
+  padding-left: 30px !important;
+}
+
+.alarm-inactive{
+  background-color:#EFEFEF !important; 
+}
+
+.alarm-body{
+  width: 100%;
+  height: 35px;
+}
+.alarm-subbody{
+  width: 100%;
+  height: 15px;
+  font-size: 15px;
+  color: #999;
+}
+.alarm-time{
+  font-size: 26px;
+  color: #777;
+}
+
+.alarm-switch{
+  top:15px;
+}
+
+.checkbox-item{
+  width:20px;
+  height:20px;
+}
+.checkbox-text{
+  font-size:20px;
+  margin-left:10px;
+}
+.display_days{
+  font-size: 13px;
+  color: #888;
+  float: right;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+/* alarmSetting end*/
 
 /*  home end */
 

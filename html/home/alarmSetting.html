@@ -8,11 +8,14 @@
   <meta http-equiv="x-rim-auto-match" content="none">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>赛丰智能学生卡</title>
-  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css"/>
-  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css"/>
-  <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/safPhone/css/clockpicker.css">
+      <link rel="stylesheet" type="text/css" href="/safPhone/css/standalone.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+
 
 </head>
 
@@ -21,122 +24,292 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <a href="javascript:window.history.go(-1)"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
-        <span class="navbar-text navbar-title clearfloat">闹钟设定</span>
+        <span class="navbar-text navbar-title clearfloat">闹钟</span>
       </div>
     </div>
   </nav>
 
 
-  <div class="mine-list">
-    <li  class="list-group-item">
+  <form class="form" role="form">
 
-    <span class="list-item-content-normal">定时开关机</span>
+    <div class="form-group">
+      <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+      <input id="alarm-time" type="text" class="form-control" value="" placeholder="--:--" style="border:none;background-color:#FCFCFC;box-shadow:none;font-size:60px;width:100%;height:60px;text-align:center">
+      </div>
+    </div>
 
-      <input id="swithButton" class="mui-switch mui-switch-anim pull-right" type="checkbox">
-    </li>
+    <div class="mine-list">
+      <li class="list-group-item" data-toggle="modal" data-target="#myModal" style="online:none;">
+      <span class="list-item-content-normal">重复</span>
+        <i class="fa fa-angle-right fa-lg" style="float:right;color:#999;margin-top:5px;"></i>
+        <span id="display_days" class="display_days"></span>
+      </li>
+      <li class="list-group-item">
+      <span class="list-item-content-normal">启用</span>
+        <input id="switch" class="mui-switch mui-switch-anim pull-right" type="checkbox">
+      </li>
+    </div>
+
+
+    <div class="btn-panel">
+      <button type="button" id="save" class="oprateBtn btn">保存</button>
+
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">闹钟重复频率</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周一" class="checkbox-item" ><span class="checkbox-text">周一</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周二" class="checkbox-item" ><span class="checkbox-text">周二</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周三" class="checkbox-item" ><span class="checkbox-text">周三</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周四" class="checkbox-item" ><span class="checkbox-text">周四</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周五" class="checkbox-item" ><span class="checkbox-text">周五</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周六" class="checkbox-item" ><span class="checkbox-text">周六</span></label>
+                  </div>
+                  <div class="checkbox">
+                  <label ><input type="checkbox" value="周日" class="checkbox-item" ><span class="checkbox-text">周日</span></label>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" id="submit" class="btn btn-primary"  data-dismiss="modal">提交更改</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+  </form>
+
+
   </div>
-
-  <div class="mine-list">
-    <li class="list-group-item">
-      <input id="startUp" type="time" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"/>
-    <span class="list-item-content-normal">开机时间</span>
-
-      <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
-
-    </li>
-
-  </div>
-
-  <div class="mine-list">
-    <li class="list-group-item">
-      <input id="shutDown" type="time" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;"/>
-    <span class="list-item-content-normal">关机时间</span>
-
-      <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
-    </li>
-
-  </div>
-  <div class="text-center">
-      <button id="saveTiming" type="button" class="btn btn-default submit">保存</button>
-  </div>
-
-
-
-
   <script src="/safPhone/js/jquery.js"></script>
+  <script src="/safPhone/js/getUrlParams.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
-<script>
-  $(function(){
-    $("body").css("opacity",1);
+  <script src="/safPhone/js/clockpicker.js"></script>
 
+<script>
+$('.clockpicker').clockpicker();
+var url = "http://edu.winsaf.com:9999/edu/deviceMgmt/saveAlarmInfo";
+var checkboxList = $("input[type='checkbox']").not("#switch");
+var requestData = {};
+
+$(function(){
+    $("body").css("opacity",1);
+    requestData.deviceID = $.cookie("deviceID");
+    var alarmID = getUrlParams("alarmID") == null ? "" : getUrlParams("alarmID");
+    var enable = getUrlParams("enable") == null ? "" : getUrlParams("enable");
+    var repeatMode = getUrlParams("repeatMode") == null ? "" : getUrlParams("repeatMode");
+    var alarmTime = getUrlParams("alarmTime") == null ? "" : getUrlParams("alarmTime");
+    var days = getUrlParams("days") == null ? "" : getUrlParams("days");
+    console.log(days);
+    if(alarmID != "" && alarmTime != ""){
+      $("#alarm-time").val(alarmTime);
+      if (enable ==1) {
+        $("#switch").attr("checked",true);
+      }else {
+        $("#switch").attr("checked",false);
+      }
+      if (repeatMode == 1) {
+        $("#display_days").text("一次");
+      }else if(repeatMode == 2) {
+        $("#display_days").text("每天");
+        checkboxList.attr("checked",true);
+      }else if(repeatMode == 3){
+        $("#display_days").text("工作日");
+        for(var i = 0; i < 5; i++){
+          $(checkboxList[i]).attr("checked", true);
+        }
+
+      }else {
+          var arrayDays = days.split(",");
+          var arrayDisplayDays = [];
+          for (var i = 0; i < arrayDays.length; i++) {
+            var tempDay = arrayDays[i];
+            switch(tempDay){
+              case "1":
+              $(checkboxList[0]).attr("checked", true);
+              arrayDisplayDays.push("周一");
+              break;
+              case "2":
+              $(checkboxList[1]).attr("checked", true);
+              arrayDisplayDays.push("周二");
+              break;
+              case "3":
+              $(checkboxList[2]).attr("checked", true);
+              arrayDisplayDays.push("周三");
+              break;
+              case "4":
+              $(checkboxList[3]).attr("checked", true);
+              arrayDisplayDays.push("周四");
+              break;
+              case "5":
+              $(checkboxList[4]).attr("checked", true);
+              arrayDisplayDays.push("周五");
+              break;
+              case "6":
+              $(checkboxList[5]).attr("checked", true);
+              arrayDisplayDays.push("周六");
+              break;
+              case "7":
+              $(checkboxList[6]).attr("checked", true);
+              arrayDisplayDays.push("周日");
+              break;
+            }
+          }
+          $("#display_days").text(arrayDisplayDays);
+
+      }
+        url = "http://edu.winsaf.com:9999/edu/deviceMgmt/updateAlarmInfo";
+
+      requestData.alarmID = alarmID;
+      requestData.enable = enable;
+      requestData.repeatMode = repeatMode;
+      requestData.alarmTime = alarmTime;
+      requestData.days = days;
+      $("#save").after('<button type="button" id="delete" class="oprateBtn btn">删除</button>');
+
+    }
+
+
+
+
+});
+
+
+$("#save").click(function(){
+  if ($("#alarm-time").val() != "") {
+
+    requestData.deviceID = $.cookie("deviceID");
+    requestData.alarmTime = $("#alarm-time").val();
+    requestData.enable = $("#switch").get(0).checked ? 1 : 2;
 
     $.ajax({
-       url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getTimingSwitch',
+       url: url,
        type: "POST",
        contentType: "application/json",
        headers: {
               "token" : $.cookie("token"),
               "userID" : $.cookie("userID")
           },
-       data:JSON.stringify({deviceID : $.cookie("deviceID")}),
+       data:JSON.stringify(requestData),
        success: function(data){
+          console.log(requestData);
           console.log(data);
-
-          $("#startUp").val(data.powerOnTime);
-          $("#shutDown").val(data.powerOffTime);
-          if(data.enable == 1){
-            $(".mui-switch").attr("checked",true);
+          if(data.rspCode == 1){
+            window.location.href = "alarmList.html";
           }else {
-            $(".mui-switch").attr("checked",false);
+            alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
           }
 
        },
-       error:function(XMLHttpRequest, textStatus, errorThrown){
-         console.log(XMLHttpRequest);
-         console.log(textStatus);
-         console.log(errorThrown);
-        alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+       error:function(data){
+         console.log(data);
+        alert("程序错误！请将下列信息提供给管理人员" + data);
        }
      });//ajax end
-     $(".list-group-item").click(function(){
-       $(this).children("input").focus();
-     });
+  }else {
+    alert("时间不能为空");
+  }
 
-    //保存设定
-    $("#saveTiming").click(function(){
-      var timingJson = {
-        deviceID : $.cookie("deviceID"),
-        powerOnTime : $("#startUp").val(),
-        powerOffTime : $("#shutDown").val(),
-        enable : $("#swithButton").is(":checked")?1:2
-      };
-      console.log($("#swithButton").val());
-      console.log(timingJson);
-      $.ajax({
-         url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/saveTimingSwitch',
-         type: "POST",
-         contentType: "application/json",
-         headers: {
-                "token" : $.cookie("token"),
-                "userID" : $.cookie("userID")
-            },
-         data:JSON.stringify(timingJson),
-         success: function(data){
-            console.log(data);
+});
 
-         },
-         error:function(XMLHttpRequest, textStatus, errorThrown){
-           console.log(XMLHttpRequest);
-           console.log(textStatus);
-           console.log(errorThrown);
-          alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
-         }
-       });//ajax end
-    });
+//选择好重复频率
+$("#submit").click(function(){
+  var flag_everyday = 0;
+  var flag_workday = 0;
+  var days_display = [];
+  var days = [];
+  var mode = 1;
 
 
-  });
+  var length = checkboxList.size();
+  for (var i = 0; i < length; i++) {
+
+    if (checkboxList[i].checked) {
+      flag_everyday++;
+      if (i <= 4) {
+        flag_workday++;
+      }
+
+      days_display.push(checkboxList[i].value);
+      days.push(i+1);
+    }
+    console.log(checkboxList[i].checked);
+  }
+
+  if(days != ""){
+    if(flag_everyday == 7){
+      days_display = "每天";
+      mode = 2;
+    }else {
+      if (flag_workday == 5) {
+        if(flag_everyday == 6){
+          mode = 4;
+        }else{
+          days_display = "工作日";
+          mode = 3;
+        }
+      }else {
+        mode = 4;
+      }
+    }
+  }else {
+    days_display = "一次"
+  }
+
+  $("#display_days").text(days_display);
+  requestData.repeatMode = mode;
+  requestData.days = days.join(",");
+
+
+});
+
+$(".btn-panel").on("click", "#delete", function(){
+  url = "http://edu.winsaf.com:9999/edu/deviceMgmt/deleteAlarmInfo";
+  $.ajax({
+     url: url,
+     type: "POST",
+     contentType: "application/json",
+     headers: {
+            "token" : $.cookie("token"),
+            "userID" : $.cookie("userID")
+        },
+     data:JSON.stringify(requestData),
+     success: function(data){
+        console.log(data);
+        if(data.rspCode == 1){
+          window.location.href = "alarmList.html";
+        }else {
+          alert("删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
+        }
+
+     },
+     error:function(data){
+       console.log(data);
+      alert("程序错误！请将下列信息提供给管理人员" + data);
+     }
+   });//ajax end
+});
+
+
 </script>
 
 </body>
