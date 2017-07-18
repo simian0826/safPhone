@@ -48,7 +48,7 @@ a, a:visited, a:focus, a:hover{
 .navbar-title {
   display: inline-block;
   font-weight: 600;
-  width: 180px;
+
 }
 .navbar-text{
   color: #fff !important;
@@ -61,6 +61,42 @@ a, a:visited, a:focus, a:hover{
   color: #666;
   font-size: 20px;
   color: #fff;
+}
+
+.location-block{
+  width:250px;
+  height:50px;
+  padding-top:3px;
+  font-size:12px;
+  display:inline-block;
+  color:#fff;
+  float:left;
+}
+.location-info{
+  width:100%;
+  height:15px;
+  display:inline-block;
+}
+.location-time{
+  width:100%;
+  height:15px;
+  display:inline-block;
+}
+
+.location-type{
+  display:inline-block;
+  border:1px solid #fff;
+  border-radius:5px;
+  width:40px;
+  text-align:center;
+  padding:2px 1px 0 1px;
+  font-size: 12px;
+  margin-right:10px;
+}
+.state-info{
+  color:#fff;
+  padding-top:5px;
+  display:inline-block
 }
 
 #main-content{
@@ -332,7 +368,7 @@ a, a:visited, a:focus, a:hover{
 }
 
 .alarm-inactive{
-  background-color:#EFEFEF !important; 
+  background-color:#EFEFEF !important;
 }
 
 .alarm-body{
@@ -438,19 +474,49 @@ a, a:visited, a:focus, a:hover{
   color: #0078D7;
   font-size: 15px;
 }
+#fenceSettingBox{
+  display: none;
+  width: 100%;
+  height: 160px;
+  border-bottom: 1px solid #eee;
+  position: fixed;
+  z-index: 9999;
+  top: 50px;
+  left: 0;
+  background-color: #fff;
+  padding: 10px 15px;
 
-#fenceAddAlert{
+}
+
+.fenceItemName{
+  display: inline-block;
+  width: 80%;
+}
+
+.zoom-type{
+  color: #316CD8 !important;
+  padding: 4px 35px;
+}
+
+.zoom-type.active{
+  background-color: #316CD8 !important;
+  color: #FFF !important;
+}
+.btn-default:disabled{
+  color:#E34639;
+  background-color: #ccc;
+}
+#alert{
   width: 100%;
   display: none;
   position: fixed;
-  top: 20%;
-  z-index: 999;
+  top: 10%;
+  z-index: 99999;
 }
 
 .circleConfirm{
   position: absolute;
-
-  top:50%;
+  top:60%;
   left: 50%;
   z-index: 66;
   display: none;

@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
 
 
@@ -18,11 +19,14 @@
 </head>
 
 <body style="opacity:0;transition:opacity .5s">
-  <nav class="navbar navbar-default text-center state-bar" role="navigation">
+  <nav class="navbar navbar-default state-bar" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="#"><i class="glyphicon glyphicon-exclamation-sign navbar-return"></i></a>
-        <span class="navbar-text navbar-title clearfloat">小明</span>
+        <span class="location-block">
+          <span id="location-info" class="location-info"></span>
+          <span id="location-time" class="location-time"></span>
+        </span>
+        <span id="state-info" class="state-info pull-right"><span id="location-type" class="location-type" ></span><i id="location-battery" class="fa fa-battery-4 fa-lg"></i></span>
       </div>
     </div>
   </nav>
@@ -30,10 +34,54 @@
     <button type="button" id="path" class="btn btn-default" data-toggle="modal" data-target="#pathModal">轨迹</button>
     <button type="button" id="fence" class="btn btn-default" data-toggle="modal" data-target="#fenceModal">围栏</button>
     <button type="button" id="trace" class="btn btn-default">追踪</button>
-    <button type="button" id="center" class="btn btn-default">定位</button>
+    <button type="button" id="locate" class="btn btn-default">定位</button>
   </div>
-  <button id='circleConfirm' class='btn btn-warning circleConfirm'>确定</button>
+  <button id='circleConfirm' class='btn btn-primary circleConfirm' style="background-color:#316CD8">确定</button>
   <div id="container" style="width:100%; height:92%"></div>
+
+  <div id="fenceSettingBox" name="0">
+    <form class="form-horizontal" role="form">
+      <div class="form-group" style="margin-bottom:8px;">
+        <label for="firstname" class="col-xs-2 control-label text-right" style="padding-right:0;padding-top:5px;">标题</label>
+        <div class="col-xs-10">
+          <input type="text" class="form-control" id="fenceName" placeholder="请输入标题">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:8px;">
+        <label for="firstname" class="col-xs-2 control-label text-right" style="padding-right:0;padding-top:5px;">类型</label>
+        <div class="col-sm-offset-2 col-xs-10">
+          <div id="fenceType" class="btn-group" data-toggle="buttons">
+            <label id="safeZoom" class="btn btn-default zoom-type active" value="2">
+                <input type="radio" name="options" >安全区域
+            </label>
+            <label id="dangerousZoom" class="btn btn-default zoom-type" value="1">
+                <input type="radio" name="options" >危险区域
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:5px;margin-left:-1px">
+        <label for="firstname" class="col-xs-4 control-label text-right" style="padding-right:0;">区域中开启GPS</label>
+        <div class="col-xs-2">
+          <input id="switchGPS" class="mui-switch mui-switch-anim" type="checkbox">
+        </div>
+        <label for="firstname" class="col-xs-3 control-label text-right" style="padding-right:0;">是否激活</label>
+        <div class="col-xs-2">
+          <input id="switchActive" class="mui-switch mui-switch-anim" type="checkbox">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button id="drawFence" type="button" class="btn btn-default pull-left" style="margin-left:35px;padding:3px 10px;">画出区域</button>
+
+        <button id="saveFence" type="button" class="btn btn-info pull-right" style="margin-right:25px;padding:3px 10px;background-color:#316CD8"  style="background-color:#176AFF">保存</button>
+      </div>
+
+
+    </form>
+  </div><!-- #fenceSettingBox end -->
 
 
 
@@ -46,7 +94,7 @@
               <span id="fenceAdd">添加</span>
               <h4 class="modal-title" id="myModalLabel">电子围栏</h4>
         </div>
-        <div class="modal-body">
+        <div id="fenceList" class="modal-body" style="padding:0">
 
         </div>
 
@@ -103,17 +151,20 @@
   </div>
 
 
-  <div id="fenceAddAlert" class="alert alert-danger">
+  <div id="alert" class="alert">
     <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>请在地图上画出圆形围栏区域</strong>
-    </div>
+    <strong></strong>
+  </div>
 
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
   <script>
-  var timer;
-  var latestLocationInfo;
+  var timer, latestLocationInfo, circle, fenceList;
+  var getFenceRequest = {
+    deviceID: $.cookie("deviceID"),
+    type: 0
+  };
   var mapOption =  {
     resizeEnable: true,
     center: [106.5481624, 29.5150453],
@@ -124,6 +175,16 @@
     icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
     position: ""
   };
+
+  var circleOption = {
+    center: [],// 圆心位置
+    radius: 600, //半径
+    strokeColor: "#0FA55A", //线颜色
+    strokeOpacity: 1, //线透明度
+    strokeWeight: 3, //线粗细度
+    fillColor: "#21EA86", //填充颜色
+    fillOpacity: 0.35//填充透明度
+  }
   $.ajax({
      url: 'http://edu.winsaf.com:9999/location/latestLocation',
      type: "POST",
@@ -135,18 +196,19 @@
       },
      data:JSON.stringify({imei:  $.cookie("deviceID")}),
      success: function(data){
-      console.log(data);
-      latestLocationInfo = data;
 
+      latestLocationInfo = data;
+      setStateBarInfo(latestLocationInfo);
       if (!$.isEmptyObject(latestLocationInfo)) {
         mapOption.center = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
         markerOption.position = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
       }
      },
      error:function(){
-      console.log(data);
+
      }
     });
+
   //地图初始化
   var map = new AMap.Map('container',mapOption);
   //获取到最近位置之后点标记出中心点
@@ -155,6 +217,14 @@
     marker.setMap(map);
   }
 
+  timer = setInterval(function(){
+    getLastLocation();
+    map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+    marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+    marker.setMap(map);
+    setStateBarInfo(latestLocationInfo);
+    console.log("aaa");
+  }, 10000);
 
 
 $(function() {
@@ -162,63 +232,270 @@ $(function() {
 
 });
 
+//工具按钮点击清理地图
+$(".toolbar button").click(function() {
+  cleanMap();
+});
+
 
 
 //查询电子围栏
 $("#fence").click(function(){
+  $("#fenceList").children().remove();
+  $.ajax({
+     url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getAreaList',
+     type: "POST",
+     contentType: "application/json",
+     async: false,
+     headers: {
+        "token" : $.cookie("token"),
+        "userID" : $.cookie("userID")
+      },
+     data:JSON.stringify(getFenceRequest),
+     success: function(data){
+       if(data != null && data != ""){
+        fenceList = data.list;
+        for (var i = 0; i < fenceList.length; i++) {
+          fenceItemCreate(fenceList[i], i);
+        }
+       }
+
+     },
+     error:function(){
+         alertMessage("alert alert-danger", "电子围栏列表获取错误");
+
+     }
+    });
 
 });
 
-  //电子围栏添加
-$("#fenceAdd").click(function(){
-  map.clearMap();
-  $("#fenceModal").modal("hide");
-  $("#fenceAddAlert").fadeIn(500);
-  setTimeout(function(){
-    $("#fenceAddAlert").fadeOut(500);
-  },3000);
-  var editor = {};
-  editor._circle = (function(){
-      var center = map.getCenter();
+$("button,a").not(".fenceItem, #fenceAdd, #circleConfirm, #saveFence").click(function () {
+  $("#fenceSettingBox").slideUp();
+});
 
-      var circle = new AMap.Circle({
-          center: [center.lng, center.lat],// 圆心位置
-          radius: 600, //半径
-          strokeColor: "#F33", //线颜色
-          strokeOpacity: 1, //线透明度
-          strokeWeight: 3, //线粗细度
-          fillColor: "#ee2200", //填充颜色
-          fillOpacity: 0.35//填充透明度
-      });
-      circle.setMap(map);
-      return circle;
-  })();
+
+$("#fenceAdd").click(function(){
+    cleanMap();
+    $("#fenceSettingBox").attr("name", 0);
+    $("#fenceName").val("");
+    $("#safeZoom").addClass("active").siblings().removeClass("active");
+    $("#switchActive").get(0).checked = false;
+    $("#switchGPS").get(0).checked = false;
+    $("#drawFence").removeAttr("disabled");
+    circle = null;
+    var tempPoint = getLastLocation().point;
+    circleOption = {
+      center: [tempPoint.lon, tempPoint.lat],// 圆心位置
+      radius: 600, //半径
+      strokeColor: "#0FA55A", //线颜色
+      strokeOpacity: 1, //线透明度
+      strokeWeight: 3, //线粗细度
+      fillColor: "#21EA86", //填充颜色
+      fillOpacity: 0.35//填充透明度
+    }
+      $("#fenceModal").modal('hide');
+      $("#fenceSettingBox").slideDown();
+
+});
+
+//修改查询电子围栏
+$("#fenceList").on("click", ".fenceItemName", function() {
+  cleanMap();
+  var fenceTemp = fenceList[$(this).attr("name")];
+  $("#fenceSettingBox").attr("name", fenceTemp.id);
+  $("#fenceName").val(fenceTemp.name);
+  if (fenceTemp.type = 1) {
+    $("#dangerousZoom").addClass("active").siblings().removeClass("active");
+    circleOption.fillColor = "#EE2200"
+    circleOption.strokeColor = "#F33";
+  }else {
+    $("#safeZoom").addClass("active").siblings().removeClass("active");
+  }
+  if (fenceTemp.openGps == 1) {
+    $("#switchGPS").get(0).checked = true;
+  }else {
+      $("#switchGPS").get(0).checked = false;
+  }
+  if (fenceTemp.enable == 1) {
+    $("#switchActive").get(0).checked = true;
+  }else {
+      $("#switchActive").get(0).checked = false;
+  }
+  circleOption.radius = fenceTemp.radius;
+  circleOption.center = [fenceTemp.points[0].lon, fenceTemp.points[0].lat];
+    $("#drawFence").attr("disabled", "disabled");
+    $("#fenceSettingBox").slideDown();
+    $("#fenceModal").modal('hide');
+    map.panTo(circleOption.center);
+    circle = new AMap.Circle(circleOption);
+
+    circle.setMap(map);
+    var circleEditor = new AMap.CircleEditor(map, circle);
+    circleEditor.open();
+    $("#circleConfirm").fadeIn(100);
+    $("#circleConfirm").click(function() {
+      circleEditor.close();
+      $("#circleConfirm").fadeOut(100);
+    });
+
+
+});
+
+$("#fenceList").on("click", ".fenceItemClose", function() {
+  var removeFence = $(this);
+  var fenceTemp = fenceList[removeFence.attr("name")];
+
+  var fenceDeleteRequest = {
+    deviceID: $.cookie("deviceID"),
+    id: fenceTemp.id
+  }
+  $.ajax({
+     url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/deleteArea',
+     type: "POST",
+     contentType: "application/json",
+     async: false,
+     headers: {
+        "token" : $.cookie("token"),
+        "userID" : $.cookie("userID")
+      },
+     data:JSON.stringify(fenceDeleteRequest),
+     success: function(data){
+      if(data.rspCode == 1){
+        alertMessage("alert alert-success", "电子围栏删除成功");
+        removeFence.parent().remove();
+      }else{
+        alertMessage("alert alert-danger", "电子围栏删除失败");
+      }
+
+     },
+     error:function(){
+
+      alertMessage("alert alert-danger", "电子围栏删除错误");
+     }
+   });//ajax end
+});
+
+  //画电子围栏
+$("#drawFence").click(function(){
+  $("#fenceSettingBox").slideUp();
+  cleanMap();
+
+  if($("#fenceType label.active").attr("value") == 1){
+    circleOption.fillColor = "#EE2200"
+    circleOption.strokeColor = "#F33";
+  }
+  $("#fenceModal").modal("hide");
+  alertMessage("alert alert-warning", "请在地图上画出圆形围栏区域")
+  var center = map.getCenter();
+
+  circle = new AMap.Circle(circleOption);
+  circle.setMap(map);
+  var editor = {};
   map.setFitView();
 
-  editor._circleEditor = new AMap.CircleEditor(map, editor._circle);
+  editor._circleEditor = new AMap.CircleEditor(map, circle);
   editor._circleEditor.open();
-  //$(".amap-marker-label").before("<button id='circleConfirm' class='btn btn-default circleConfirm'>确定</button>");
+  $("#circleConfirm").fadeIn(100);
+
+//区域画好后确定
   $("#circleConfirm").click(function() {
     editor._circleEditor.close();
     $("#circleConfirm").fadeOut(100);
+      $("#fenceSettingBox").slideDown();
   });
+});
+
+$("#saveFence").click(function() {
+  if ($("#circleConfirm").css("display") == "block") {
+    alertMessage("alert alert-danger", "请确认区域");
+  }else{
+    var fenceID = null;
+    if(circle == null){
+      alertMessage("alert alert-danger", "请先画出区域");
+    }else {
+      if($("#fenceName").val() == ""){
+        alertMessage("alert alert-danger", "请输入标题");
+      }else {
+        if ($("#fenceSettingBox").attr("name") != 0) {
+          fenceID = $("#fenceSettingBox").attr("name");
+        }
+        var fenceRequest = {
+          id: fenceID,
+          name: $("#fenceName").val(),
+          deviceID: $.cookie("deviceID"),
+          type: $("#fenceType label.active").attr("value"),
+          shapeType: 0,
+          points: [{
+            lon: circle.getCenter().lng,
+            lat: circle.getCenter().lat
+          }],
+          radius: circle.getRadius(),
+          openGps: $("#switchGPS").get(0).checked ? 1 : 2,
+          enable: $("#switchActive").get(0).checked ? 1 : 2
+        };
+
+        $.ajax({
+           url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/saveArea',
+           type: "POST",
+           contentType: "application/json",
+           async: false,
+           headers: {
+              "token" : $.cookie("token"),
+              "userID" : $.cookie("userID")
+            },
+           data:JSON.stringify(fenceRequest),
+           success: function(data){
+            if(data.rspCode == 1){
+                alertMessage("alert alert-success", "电子围栏保存成功");
+            }else{
+                alertMessage("alert alert-danger", "电子围栏保存失败");
+            }
+           },
+           error:function(){
+             alertMessage("alert alert-success", "电子围栏保存错误");
+           }
+         });//ajax end
+         $("#fenceSettingBox").slideUp();
+        }
+    }
+  }
 
 
-  $("#circleConfirm").fadeIn(100);
 });
 
 
-$("#center").click(function(){
-  var center = map.getCenter()
-    console.log(center);
-    console.log(center.lng);
-    console.log(center.lat);
+
+
+$("#locate").click(function(){
+  if(latestLocationInfo.status ==2){
+      alertMessage("alert alert-info", "设备离线");
+  }else {
+    var count = 0;
+      clearInterval(timer);
+    timer = setInterval(function(){
+      getLastLocation();
+      map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+      marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+      marker.setMap(map);
+      setStateBarInfo(latestLocationInfo);
+      ++count;
+      if (count == 4) {
+        clearInterval(timer-1);
+        clearInterval(timer);
+        timer = setInterval(function(){
+          getLastLocation();
+          map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+          marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+          marker.setMap(map);
+          setStateBarInfo(latestLocationInfo);
+
+        },60000);
+      }
+    }, 5000);
+
+  }
 
 });
-
-
-
-
 
 //轨迹时间类型选择
 $("#pathTypeMenu a").click(function() {
@@ -236,17 +513,14 @@ $("#searchPath").click(function(){
   var today = new Date();
   var yesterday = new Date();
   var theDayBeforeYesterday = new Date();
-
-
   var todayStart = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate() + " " + "00-00-00";
   var todayEnd = today.getFullYear()+"-" + (today.getMonth()+1) + "-" + today.getDate() + " " + today.getHours() + "-" + today.getMinutes() + "-" +  today.getSeconds();
   yesterday.setTime(yesterday.getTime() - 24*60*60*1000);
   var yesterdayStart = yesterday.getFullYear()+"-" + (yesterday.getMonth()+1) + "-" + yesterday.getDate() + " " + "00-00-00";
   var yesterdayEnd = yesterday.getFullYear()+"-" + (yesterday.getMonth()+1) + "-" + yesterday.getDate() + " " + "23-59-59";
-  theDayBeforeYesterday.setTime(today.getTime() - 3*24*60*60*1000);
+  theDayBeforeYesterday.setTime(today.getTime() - 2*24*60*60*1000);
   var theDayBeforeYesterdayStart = theDayBeforeYesterday.getFullYear()+"-" + (theDayBeforeYesterday.getMonth()+1) + "-" + theDayBeforeYesterday.getDate() + " " + "00-00-00";
   var theDayBeforeYesterdayEnd = theDayBeforeYesterday.getFullYear()+"-" + (theDayBeforeYesterday.getMonth()+1) + "-" + theDayBeforeYesterday.getDate() + " " + "23-59-59";
-
   var start, end, mode;
   switch ($("#pathDate").attr("value")) {
     case "-2":
@@ -274,7 +548,6 @@ $("#searchPath").click(function(){
     end: end
   }
 
-  console.log(requestData);
 
   $.ajax({
      url: 'http://edu.winsaf.com:9999/locationHistroyRead/getLocationHistory',
@@ -287,7 +560,7 @@ $("#searchPath").click(function(){
       },
      data:JSON.stringify(requestData),
      success: function(data){
-      console.log(data);
+
       pathInfo = data;
       if (!$.isEmptyObject(pathInfo)) {
         cleanMap();
@@ -297,7 +570,7 @@ $("#searchPath").click(function(){
         for (var i = 0; i < pathInfo.trackList.length; i++) {
           path.push([pathInfo.trackList[i].point.lon, pathInfo.trackList[i].point.lat]);
         }
-        console.log(path);
+
         var polyline = new AMap.Polyline({
           path: path, //设置线覆盖物路径
           strokeColor: "#3366FF", //线颜色
@@ -321,16 +594,14 @@ $("#searchPath").click(function(){
 
         markerChild.setMap(map);
 
-        markerChild.moveAlong(path, 5000);
+        markerChild.moveAlong(path, 3000);
 
       }
      },
      error:function(){
-      console.log(data);
+
      }
     });
-
-
 
 });
 
@@ -353,18 +624,22 @@ $("#trace").click(function() {
       },
      data:JSON.stringify(openTracingRequest),
      success: function(data){
-      console.log(data);
+
       cleanMap();
       if (data.rspCode == 1) {
+        alertMessage("alert alert-info", "实时追踪开启");
+        clearInterval(timer);
         timer = setInterval(function(){
-          console.log(tracePath);
+
           pushTracingPath(tracePath);
           drawPath(tracePath);
-        }, 1000);
+        }, 10000);
       }else if (data.rspCode == 2243) {
+          alertMessage("alert alert-info", "设备离线");
         alert("设备离线")
       }else if(data.rspCode == 2242){
-        alert("未找到设备")
+          alertMessage("alert alert-info", "未找到设备");
+
       }
      },
      error:function(){
@@ -374,21 +649,21 @@ $("#trace").click(function() {
 
 });
 
-
-$("button").not("#trace").click(function(){
+//清楚跟踪轮询
+$("button").not("#trace,#locate").click(function(){
   if(timer != null ){
+    console.log(timer);
     clearInterval(timer);
+    timer = setInterval(function(){
+      getLastLocation();
+      map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+      marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+      marker.setMap(map);
+      setStateBarInfo(latestLocationInfo);
+    }, 60000);
   }
 
 });
-
-  // setTimeout(function() {
-  //   lineArr.push([106.490955,29.525593]);
-  //   polyline.setPath(lineArr);
-  //   polyline.setMap(map);
-  // }, 3000);
-
-
 
   //工具栏
   map.plugin(["AMap.ToolBar", 'AMap.Scale', 'AMap.MapType'], function() {
@@ -397,16 +672,13 @@ $("button").not("#trace").click(function(){
     map.addControl(new AMap.MapType());
   });
 
-
-function circleConfirm(){
-  alert("a");
-
-}
-
 //清除地图上的标记，并重新标记当前位置
 function cleanMap(){
     map.clearMap();
+    var poionTemp = getLastLocation().point;
+    marker.setPosition([poionTemp.lon, poionTemp.lat])
     marker.setMap(map);
+    $("#circleConfirm").fadeOut(100);
 }
 
 //获取当前位置
@@ -426,29 +698,19 @@ function getLastLocation(){
       },
      data:JSON.stringify({imei:  $.cookie("deviceID")}),
      success: function(data){
-      console.log(data);
       latestLocationInfo = data;
 
-      if (!$.isEmptyObject(latestLocationInfo)) {
-        point.lat = latestLocationInfo.point.lat;
-        point.lon = latestLocationInfo.point.lon;
-
-
-    }else {
-
-    }
      },
      error:function(){
-      console.log(data);
      }
     });
-      return point;
+      return latestLocationInfo;
 }
 
 //将获取到的最新位置添加到传入的数组中
 function pushTracingPath(path){
-  var point = getLastLocation()
-  console.log(point);
+  var point = getLastLocation().point;
+
   path.push([point.lon, point.lat]);
 }
 
@@ -467,6 +729,59 @@ function drawPath(path) {
   });
 
   traceLine.setMap(map);
+}
+
+
+function setStateBarInfo(data) {
+  $("#location-info").text(data.address);
+  $("#location-time").text(data.time);
+  var locationType;
+  switch (data.type) {
+    case 1:
+    locationType = "LBS";
+      break;
+    case 2:
+    locationType = "WIFI";
+      break;
+    case 3:
+    locationType = "GPS";
+      break;
+  }
+  $("#location-type").text(locationType);
+  switch (data.battery) {
+    case 6:
+    $("#location-battery").attr("class", "fa fa-battery-4 fa-lg");
+      break;
+    case 5,4:
+    $("#location-battery").class("class", "fa fa-battery-3 fa-lg");
+      break;
+    case 3:
+      $("#location-battery").class("class", "fa fa-battery-2 fa-lg");
+      break;
+    case 2,1:
+      $("#location-battery").class("class", "fa fa-battery-1 fa-lg");
+      break;
+    case 0:
+      $("#location-battery").class("class", "fa fa-battery-0 fa-lg");
+      break;
+  }
+
+}
+
+//电子围栏列表创建
+function fenceItemCreate(data ,index) {
+  $("#fenceList").append('<a href="#" class="list-group-item fenceItem" ><span class="fenceItemName" name=' + index + '>' + data.name + '</span><button type="button" class="close fenceItemClose" name=' + index + '>&times;</button></a>')
+}
+
+
+//提示框弹出
+function alertMessage(type,content){
+  $("#alert").attr("class", type);
+  $("#alert strong").text(content);
+  $("#alert").fadeIn(500);
+  setTimeout(function(){
+    $("#alert").fadeOut(500);
+  },2000);
 }
 
 </script>
