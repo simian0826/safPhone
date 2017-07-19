@@ -21,8 +21,8 @@
   <nav class="navbar navbar-default text-center state-bar" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="#"><i class="glyphicon glyphicon-exclamation-sign navbar-return"></i></a>
-        <span class="navbar-text navbar-title clearfloat">小明</span>
+
+        <span id="childName" class="navbar-text navbar-title clearfloat">小明</span>
       </div>
     </div>
   </nav>
@@ -85,7 +85,7 @@
   <div class="content-list col-xs-12">
     <h6 class="list-title ">消息中心</h6>
     <div class="col-xs-3 col-sm-2 content-item">
-      <a href="#"><i class="fa fa-rss fa-2x"></i><p>sos报警</p></a>
+      <a href="home/sos.html"><i class="fa fa-rss fa-2x"></i><p>sos报警</p></a>
     </div>
 
   </div>
@@ -121,18 +121,19 @@
           },
        data:JSON.stringify({childID : childID}),
        success: function(data){
-          console.log(data);
+
           if(data.rspCode == 1){
             $("#call").attr("href", "tel:" + data.phoneNumber);
+            $("#childName").text(data.name);
 
           }else {
-            alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            alert("信息获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
           }
 
        },
        error:function(data){
          console.log(data);
-        alert("解绑错误！请将下列信息提供给管理人员" + data);
+        alert("信息获取错误！请将下列信息提供给管理人员" + data);
        }
      });//ajax end
   });
