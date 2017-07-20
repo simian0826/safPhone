@@ -76,7 +76,7 @@ $(function(){
 
 $("#submit").click(function(){
 
-
+  if($("#phoneNumber").val() != "" && $("#description").val() != ""){
     requestDate = {
       id:incomingNumId,
       deviceID: $.cookie("deviceID"),
@@ -107,6 +107,10 @@ $("#submit").click(function(){
       alert("程序错误！请将下列信息提供给管理人员" + data);
      }
    });//ajax end
+ }else {
+   alert("请输入姓名和电话");
+ }
+
 
 });
 $(".btn-panel").on("click", "#delete", function(){

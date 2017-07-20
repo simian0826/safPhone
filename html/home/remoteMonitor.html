@@ -58,37 +58,42 @@ $(function(){
 });
 
 $("#submit").click(function(){
-   var requestData = {
-      deviceID: $.cookie("deviceID"),
-      phoneNumber: $("#phoneNumber").val()
-    };
-  $.ajax({
-     url: "http://edu.winsaf.com:9999/edu/deviceMgmt/remoteMonitor",
-     type: "POST",
-     contentType: "application/json",
-     headers: {
-            "token" : $.cookie("token"),
-            "userID" : $.cookie("userID")
-        },
-     data:JSON.stringify(requestData),
-     success: function(data){
-        console.log(data);
-        if(data.rspCode == 1){
-          alert("设备将在两分钟后向" + $("#phoneNumber").val() + "回拨");
-        }else if (data.rspCode == 2242){
-          alert("未找到设备");
-        }else if (data.rspCode == 2243){
-          alert("设备不在线");
-        }else {
-          alert("监听失败！请将下列信息提供给管理人员" + data.rspCode);
-        }
+  if ($("#phoneNumber").val() == "") {
+    alert("请输入需要回拨的电话号码")
+  }else {
+    var requestData = {
+       deviceID: $.cookie("deviceID"),
+       phoneNumber: $("#phoneNumber").val()
+     };
+   $.ajax({
+      url: "http://edu.winsaf.com:9999/edu/deviceMgmt/remoteMonitor",
+      type: "POST",
+      contentType: "application/json",
+      headers: {
+             "token" : $.cookie("token"),
+             "userID" : $.cookie("userID")
+         },
+      data:JSON.stringify(requestData),
+      success: function(data){
+         console.log(data);
+         if(data.rspCode == 1){
+           alert("设备将在两分钟后向" + $("#phoneNumber").val() + "回拨");
+         }else if (data.rspCode == 2242){
+           alert("未找到设备");
+         }else if (data.rspCode == 2243){
+           alert("设备不在线");
+         }else {
+           alert("监听失败！请将下列信息提供给管理人员" + data.rspCode);
+         }
 
-     },
-     error:function(data){
-       console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
-     }
-   });//ajax end
+      },
+      error:function(data){
+        console.log(data);
+       alert("程序错误！请将下列信息提供给管理人员" + data);
+      }
+    });//ajax end
+  }
+
 
 });
 
