@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛丰智能学生卡</title>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/dragSort.css">
+
+
+</head>
+
+<body style="opacity:0;transition:opacity .5s">
+  <nav class="navbar navbar-default text-center state-bar" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a href="../mine.html"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
+        <span class="navbar-text navbar-title clearfloat">孩子信息</span>
+        <a href="childInfoSetting.html" class="navbar-text pull-right" style="color:#fff;font-size:15px;position:absolute;top:0;right:10px;">编辑</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mine-list">
+    <li class="list-group-item childInfo-item">姓名<span id="childName"  class="childInfo-content">航航</span></li>
+    <li class="list-group-item childInfo-item">昵称<span id="childNickName" class="childInfo-content">航航</span></li>
+  </div>
+
+  <div class="mine-list">
+    <li class="list-group-item childInfo-item">设备序列号<span id="deviceID" class="childInfo-content">航航</span></li>
+    <li class="list-group-item childInfo-item">设备手机号<span id="phoneNumber" class="childInfo-content">航航</span></li>
+    <li class="list-group-item childInfo-item">设备有效期<span id="expireDate" class="childInfo-content">航航</span></li>
+  </div>
+
+  <div class="mine-list">
+    <li class="list-group-item childInfo-item">学校<span id="school" class="childInfo-content">航航</span></li>
+    <li class="list-group-item childInfo-item">班级<span id="className" class="childInfo-content">航航</span></li>
+    <li class="list-group-item childInfo-item">学号<span id="studentID" class="childInfo-content">航航</span></li>
+  </div>
+
+
+
+
+<script src="/safPhone/js/jquery.js"></script>
+<script src="/safPhone/js/jquery.cookie.js"></script>
+<script src="/safPhone/js/md5.js"></script>
+<script src="/safPhone/js/bootstrap.min.js"></script>
+<script>
+$(function(){
+  $("body").css("opacity",1);
+
+  $.ajax({
+     url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getChildInfo',
+     type: "POST",
+     contentType: "application/json",
+     headers: {
+            "token" : $.cookie("token"),
+            "userID" : $.cookie("userID")
+        },
+     data:JSON.stringify({childID : $.cookie("childID")}),
+     success: function(data){
+        if(data.rspCode == 1){
+        $("#childName").text(data.name);
+        $("#childNickName").text(data.nickname);
+        $("#deviceID").text(data.deviceID);
+        $("#phoneNumber").text(data.phoneNumber);
+        $("#expireDate").text(data.expireDate);
+        $("#school").text(data.schoolName);
+        $("#className").text(data.className);
+        $("#studentID").text(data.studentNumber);
+
+        }else {
+          alert("信息获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
+        }
+
+     },
+     error:function(data){
+       console.log(data);
+      alert("解绑错误！请将下列信息提供给管理人员" + data);
+     }
+   });//ajax end
+
+
+});
+
+</script>
+
+</body>
+
+</html>
