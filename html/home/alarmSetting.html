@@ -34,16 +34,16 @@
 
     <div class="form-group">
       <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
-      <input id="alarm-time" type="text" class="form-control" value="" placeholder="--:--" style="border:none;background-color:#FCFCFC;box-shadow:none;font-size:60px;width:100%;height:60px;text-align:center">
+      <input id="alarm-time" type="text" class="form-control" value="" placeholder="--:--" readOnly="true" style="padding-top:0px;;border:none;background-color:#FCFCFC;box-shadow:none;font-size:60px;width:100%;height:80px;text-align:center">
       </div>
     </div>
 
     <div class="mine-list">
-      <li class="list-group-item" data-toggle="modal" data-target="#myModal" style="online:none;">
+      <a href="#" class="list-group-item" data-toggle="modal" data-target="#myModal" style="outline:none">
       <span class="list-item-content-normal">重复</span>
         <i class="fa fa-angle-right fa-lg" style="float:right;color:#999;margin-top:5px;"></i>
         <span id="display_days" class="display_days"></span>
-      </li>
+      </a>
       <li class="list-group-item">
       <span class="list-item-content-normal">启用</span>
         <input id="switch" class="mui-switch mui-switch-anim pull-right" type="checkbox">
@@ -196,7 +196,10 @@ $(function(){
 
 $("#save").click(function(){
   if ($("#alarm-time").val() != "") {
-
+    if ($("#display_days").text() == "") {
+      requestData.repeatMode = 1;
+      requestData.days = "";
+    }
     requestData.deviceID = $.cookie("deviceID");
     requestData.alarmTime = $("#alarm-time").val();
     requestData.enable = $("#switch").get(0).checked ? 1 : 2;
