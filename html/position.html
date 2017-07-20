@@ -336,9 +336,34 @@ $("#fenceList").on("click", ".fenceItemName", function() {
     $("#circleConfirm").click(function() {
       circleEditor.close();
       $("#circleConfirm").fadeOut(100);
+
     });
 
 
+
+});
+
+
+$("#fenceType label").click(function(){
+  cleanMap();
+  $("#circleConfirm").fadeIn(100);
+
+  if ($("#fenceType label.active").attr("value") == 2 ) {
+    circleOption.fillColor = "#EE2200"
+    circleOption.strokeColor = "#F33";
+  }else {
+    circleOption.fillColor = "#21EA86"
+    circleOption.strokeColor = "#0FA55A";
+  }
+  circle = new AMap.Circle(circleOption);
+  circle.setMap(map);
+  var circleEditor = new AMap.CircleEditor(map, circle);
+  circleEditor.open();
+  $("#circleConfirm").click(function() {
+    circleEditor.close();
+    $("#circleConfirm").fadeOut(100);
+
+  });
 });
 
 $("#fenceList").on("click", ".fenceItemClose", function() {
@@ -402,7 +427,9 @@ $("#drawFence").click(function(){
     editor._circleEditor.close();
     $("#circleConfirm").fadeOut(100);
       $("#fenceSettingBox").slideDown();
+
   });
+
 });
 
 $("#saveFence").click(function() {
