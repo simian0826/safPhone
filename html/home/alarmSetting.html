@@ -10,11 +10,12 @@
   <title>赛丰智能学生卡</title>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/safPhone/css/clockpicker.css">
-      <link rel="stylesheet" type="text/css" href="/safPhone/css/standalone.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/clockpicker.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/standalone.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -94,9 +95,7 @@
         </div><!-- /.modal -->
     </div>
 
-
   </form>
-
 
   </div>
   <script src="/safPhone/js/jquery.js"></script>
@@ -104,6 +103,7 @@
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
   <script src="/safPhone/js/clockpicker.js"></script>
+    <script src="/safPhone/js/alert.js"></script>
 
 <script>
 $('.clockpicker').clockpicker();
@@ -187,12 +187,7 @@ $(function(){
       $("#save").after('<button type="button" id="delete" class="oprateBtn btn">删除</button>');
 
     }
-
-
-
-
 });
-
 
 $("#save").click(function(){
   if ($("#alarm-time").val() != "") {
@@ -219,19 +214,17 @@ $("#save").click(function(){
           if(data.rspCode == 1){
             window.location.href = "alarmList.html";
           }else {
-            alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+              alertMessage("danger", "保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
           }
-
        },
        error:function(data){
          console.log(data);
-        alert("程序错误！请将下列信息提供给管理人员" + data);
+         alertMessage("danger", "保存错误！请联系技术人员");
        }
      });//ajax end
   }else {
-    alert("时间不能为空");
+    alertMessage("warning", "时间不能为空");
   }
-
 });
 
 //选择好重复频率
@@ -301,13 +294,13 @@ $(".btn-panel").on("click", "#delete", function(){
         if(data.rspCode == 1){
           window.location.href = "alarmList.html";
         }else {
-          alert("删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            alertMessage("danger", "删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            alertMessage("danger", "删除失败！请联系技术人员");
         }
-
      },
      error:function(data){
        console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
+        alertMessage("danger", "删除错误！请联系技术人员");
      }
    });//ajax end
 });

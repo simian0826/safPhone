@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -61,6 +62,7 @@
 <script src="/safPhone/js/jquery.js"></script>
 <script src="/safPhone/js/jquery.cookie.js"></script>
 <script src="/safPhone/js/bootstrap.min.js"></script>
+<script src="/safPhone/js/alert.js"></script>
 
 <script>
   var childLength = $.cookie("childLength");
@@ -116,34 +118,33 @@
                  success: function(data){
                     console.log(data);
                     if(data.rspCode == 1){
-                      alert("解绑成功");
-                      window.location.href="chooseChildren.html";
+                      alertMessage("success", "解绑成功",function(){
+                        window.location.href="chooseChildren.html";
+                      });
+
                     }else {
-                      alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+                      alertMessage("danger", "解绑失败，请将此代码" + data.rspCode + "告诉技术人员");
+
                     }
                  },
                  error:function(data){
                    console.log(data);
-                  alert("解绑错误！请将下列信息提供给管理人员" + data);
+
+                  alertMessage("danger", "解绑错误！请联系技术人员");
                  }
                });//ajax end
             });
-
-
           }else {
+              alertMessage("danger", "孩子列表获取失败，请将此代码" + data.rspCode + "告诉技术人员");
 
           }
        },
        error:function(data){
          console.log(data);
-        alert("提交失败！请将下列信息提供给管理人员" + data);
-
-
+           alertMessage("danger", "孩子列表获取错误！请联系技术人员");
        }
       });
     $("#chooseContent").fadeIn(1000);
-
-
 
   }
 

@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
-
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 </head>
 
@@ -53,6 +53,7 @@
   <script src="/safPhone/js/getUrlParams.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
 var incomingNumId = getUrlParams("id");
 var phoneNumber = getUrlParams("phoneNumber");
@@ -69,13 +70,10 @@ $(function(){
     }else {
       url = "http://edu.winsaf.com:9999/edu/deviceMgmt/saveWhiteList";
     }
-
-
 });
 
 
 $("#submit").click(function(){
-
   if($("#phoneNumber").val() != "" && $("#description").val() != ""){
     requestDate = {
       id:incomingNumId,
@@ -94,25 +92,21 @@ $("#submit").click(function(){
         },
      data:JSON.stringify(requestDate),
      success: function(data){
-        console.log(data);
         if(data.rspCode == 1){
-          window.history.go(-1);
+          window.location.href = "moreIncomingNum.html";
         }else {
-          alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          alertMessage("danger", "呼入号码获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
         }
-
      },
      error:function(data){
-       console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
+       alertMessage("danger", "呼入号码获取错误，请联系技术人员");
      }
    });//ajax end
  }else {
-   alert("请输入姓名和电话");
+   alertMessage("warning", "请输入姓名和电话");
  }
-
-
 });
+
 $(".btn-panel").on("click", "#delete", function(){
 
     url = "http://edu.winsaf.com:9999/edu/deviceMgmt/deleteWhiteList";
@@ -133,18 +127,16 @@ $(".btn-panel").on("click", "#delete", function(){
      success: function(data){
         console.log(data);
         if(data.rspCode == 1){
-          window.history.go(-1);
+          window.location.href = "moreIncomingNum.html";
         }else {
-          alert("删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          alertMessage("danger", "呼入号码删除失败，请将此错误码" + data.rspCode + "告诉技术人员");
         }
-
      },
      error:function(data){
        console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
+        alertMessage("danger", "呼入号码删除错误，请联系技术人员");
      }
    });//ajax end
-
 });
 
 </script>

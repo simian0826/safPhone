@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="/safPhone/css/common.css">
+<link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -63,14 +64,15 @@
 <script src="/safPhone/js/jquery.cookie.js"></script>
 <script src="/safPhone/js/bootstrap.min.js"></script>
 <script src="/safPhone/js/md5.js"></script>
+<script src="/safPhone/js/alert.js"></script>
 <script>
 
 $(function(){
   $(".sentMessage").click(function(){
     var phoneNumber = $("#phoneNumber").val();
-
     if(phoneNumber == ""){
-      alert("请输入手机号码");
+
+      alertMessage("warning", "请输入手机号码");
     }else{
       var verifyJson = {
         "phoneNumber":phoneNumber,
@@ -84,12 +86,12 @@ $(function(){
          success: function(data){
             console.log(data);
             if(data.rspCode == 2){
-              alert("验证码发送失败，请稍后再试");
+              alertMessage("danger", "验证码发送失败，请稍后再试");
             }
          },
          error:function(data){
            console.log(data);
-          alert("验证码发送错误！请将下列信息提供给管理人员" + data);
+           alertMessage("danger", "验证码发送错误！请联系技术人员");
          }
        });//ajax end
        var time = 59;
@@ -110,10 +112,11 @@ $(function(){
 
   $("#register").click(function(){
     if($(".form-input").val() == ""){
-      alert("请正确填写相关信息，不能为空");
+      alertMessage("warning", "请正确填写相关信息，不能为空");
+
     }else{
       if($("#password").val() != $("#confirmPassword").val()){
-        alert("两次输入的密码不同，请确认");
+        alertMessage("warning", "两次输入的密码不同，请确认");
       }else{
         var registerJson = {
           phoneNumber : $("#phoneNumber").val(),
@@ -128,15 +131,19 @@ $(function(){
            success: function(data){
               console.log(data);
               if(data.rspCode == 1){
-                alert("注册成功");
-                window.location.href="login.html";
+
+                alertMessage("success", "注册成功", function(){
+                  window.location.href="login.html";
+                });
+
               }else {
-                alert("注册失败，请稍后再试");
+                 alertMessage("danger", "注册失败，请将此错误码" + data.rspCode + "告诉技术人员");
               }
            },
            error:function(data){
              console.log(data);
-            alert("注册错误！请将下列信息提供给管理人员" + data);
+
+            alertMessage("danger", "注册错误！请联系技术人员");
            }
          });//ajax end
       }

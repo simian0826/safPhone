@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 </head>
 
@@ -19,7 +20,7 @@
   <nav class="navbar navbar-default text-center state-bar" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="javascript:window.history.go(-1)"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
+        <a href="../home.html"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
         <span class="navbar-text navbar-title clearfloat">监护设置</span>
       </div>
     </div>
@@ -87,6 +88,7 @@
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 
 <script>
   $(function(){
@@ -132,13 +134,16 @@
 
 
           }else {
-            alert("解绑失败，请将此错误码" + data.rspCode + "告诉技术人员");
+              alertMessage("danger", "监护号码获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
+
           }
 
        },
        error:function(data){
          console.log(data);
-        alert("解绑错误！请将下列信息提供给管理人员" + data);
+
+          alertMessage("danger", "监护号码获取错误！请联系技术人员");
+
        }
      });//ajax end
 

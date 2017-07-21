@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
+    <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 </head>
 
@@ -46,6 +47,7 @@
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
   $(function(){
     $("body").css("opacity",1);
@@ -68,21 +70,14 @@
               }
             }
           }else {
-            alert("错误！请将下列信息提供给管理人员" + data.rspCode);
+            alertMessage("danger", "闹钟获取失败！请将下列信息提供给技术人员" + + data.rspCode);
           }
-
        },
        error:function(XMLHttpRequest, textStatus, errorThrown){
-         console.log(XMLHttpRequest);
-         console.log(textStatus);
-         console.log(errorThrown);
-        alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+         alertMessage("danger", "闹钟获取错误！请联系技术人员");
        }
      });//ajax end
-
-
   });
-
 
 function createAlarmItem(data){
     var displayDays = [];
@@ -129,8 +124,6 @@ function createAlarmItem(data){
             }
         }
       }
-
-
   }
 $(".mine-list").append('<a href="alarmSetting.html?alarmID=' + data.alarmID + '&alarmTime=' + data.alarmTime + '&repeatMode=' + data.repeatMode + '&enable=' + data.enable + '&days=' + data.days + '" class="'+ clazz +'"><div class="alarm-body"><span class="alarm-time">' + data.alarmTime + '</span><i class="fa fa-angle-right fa-lg guardianship-icon-rightIn"></i></div><div class="alarm-subbody">' + displayDays + '</div></a>');
 

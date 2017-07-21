@@ -6,8 +6,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>赛丰智能学生卡</title>
-	<link rel="stylesheet" type="text/css" href="../css/initialize.css">
-	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css">
+	<link rel="stylesheet" type="text/css" href="/safPhone/css/login.css">
+	<link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 </head>
 
@@ -18,7 +20,7 @@
 		<p class="title">赛丰智能学生卡</p>
 		<div class="wrapper">
 			<div class="container">
-				<h1 id="welcome-text">欢迎</h1>
+				<h1 id="welcome-text" style="margin-top:0;color:#FFF">欢迎</h1>
 				<form class="form">
 					<span></span>
 					<input id="username" type="text" placeholder="请输入家长手机号">
@@ -47,7 +49,7 @@
 	<script src="/safPhone/js/jquery.js"></script>
 	<script src="/safPhone/js/jquery.cookie.js"></script>
 	<script src="/safPhone/js/bootstrap.min.js"></script>
-
+	<script src="/safPhone/js/alert.js"></script>
 	<script src="/safPhone/js/md5.js"></script>
 
 	<script>
@@ -66,7 +68,7 @@
 					 success: function(data){
 							console.log(data);
 							if(data.rspCode == 1){
-								$('#welcome-text').html('您好，' + $('#username').val());
+								$('#welcome-text').html('您好 ' + $('#username').val());
 								$('form').fadeOut(500);
 								$('.wrapper').addClass('form-success');
 								var childLength = 0;
@@ -82,25 +84,20 @@
 									window.location.href="chooseChildren.html";
 								},1000);
 							}else {
-								alert("用户名或密码不正确！");
+
+								alertMessage("danger", "用户名或密码不正确！");
 							}
 					 },
 					 error:function(data){
 						 console.log(data);
 						alert("提交失败！请将下列信息提供给管理人员" + data);
 
-
 					 }
 					});
 
-
-
-
 			}else{
-
-				alert("用户名密码不能为空")
+				alertMessage("warning", "用户名密码不能为空");
 			}
-
 		});
 	</script>
 

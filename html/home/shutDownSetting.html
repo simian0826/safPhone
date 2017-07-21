@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 </head>
 
@@ -66,10 +67,10 @@
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
   $(function(){
     $("body").css("opacity",1);
-
 
     $.ajax({
        url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/getTimingSwitch',
@@ -96,7 +97,8 @@
          console.log(XMLHttpRequest);
          console.log(textStatus);
          console.log(errorThrown);
-        alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+          alertMessage("danger", "监设备响铃错误！请联系技术人员");
+
        }
      });//ajax end
      $(".list-group-item").click(function(){
@@ -124,13 +126,15 @@
          data:JSON.stringify(timingJson),
          success: function(data){
           alert("保存成功");
+          alertMessage("success", "保存成功");
 
          },
          error:function(XMLHttpRequest, textStatus, errorThrown){
            console.log(XMLHttpRequest);
            console.log(textStatus);
            console.log(errorThrown);
-          alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
+            alertMessage("danger", "关机设置错误！请联系技术人员");
+
          }
        });//ajax end
     });

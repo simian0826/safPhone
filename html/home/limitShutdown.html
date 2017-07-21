@@ -13,6 +13,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -39,15 +40,10 @@
 
     <span class="info-span">开启限制关机后，设备将不能关机</span>
 
-
-
-
-
-
-
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
   $(function(){
     $("body").css("opacity",1);
@@ -63,20 +59,14 @@
        success: function(data){
           console.log(data);
 
-
           if(data.disable == 1){
             $("#switch").attr("checked",true);
           }else {
             $("#switch").attr("checked",false);
           }
 
-       },
-       error:function(XMLHttpRequest, textStatus, errorThrown){
-         console.log(XMLHttpRequest);
-         console.log(textStatus);
-         console.log(errorThrown);
-        alert("解绑错误！请将下列信息提供给管理人员" + textStatus);
        }
+
      });//ajax end
 
 
@@ -101,13 +91,11 @@ $("#switch").change(function() {
      success: function(data){
         console.log(data);
 
-
      },
      error:function(XMLHttpRequest, textStatus, errorThrown){
-       console.log(XMLHttpRequest);
-       console.log(textStatus);
-       console.log(errorThrown);
-      alert("修改错误！请将下列信息提供给管理人员" + textStatus);
+
+       alertMessage("danger", "修改错误！请联系技术人员");
+      
      }
    });//ajax end
 

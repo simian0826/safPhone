@@ -77,6 +77,7 @@
   <script src="/safPhone/js/getUrlParams.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
 var url, requestDate;
 $(function(){
@@ -100,13 +101,14 @@ $(function(){
             $("#guardNumber3").val(data.guardNumber3);
             $("#guardName3").val(data.guardName3);
           }else {
-            alert("监护号码获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            alertMessage("danger", "监护号码获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
+
           }
 
        },
        error:function(data){
          console.log(data);
-        alert("程序错误！请将下列信息提供给管理人员" + data);
+          alertMessage("danger", "监护号码获取错误！请联系技术人员");
        }
      });//ajax end
 
@@ -137,17 +139,15 @@ $("#submit").click(function(){
         },
      data:JSON.stringify(requestData),
      success: function(data){
-        console.log(data);
         if(data.rspCode == 1){
           window.location.href = "guardianship.html";
         }else {
-          alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+          alertMessage("danger", "监护号码保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
         }
-
      },
      error:function(data){
-       console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
+       alertMessage("danger", "监护号码保存错误！请联系技术人员");
+
      }
    });//ajax end
 

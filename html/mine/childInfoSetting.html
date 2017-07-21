@@ -101,17 +101,17 @@ $("#submit").click(function(){
             if(data.rspCode == 1){
               window.location.href = "childInfo.html";
             }else {
-              alert("保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+              alertMessage("danger", "保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
             }
-
          },
          error:function(data){
            console.log(data);
-          alert("程序错误！请将下列信息提供给管理人员" + data);
+           alertMessage("danger", "保存错误！请联系技术人员");
          }
        });//ajax end
     }else {
-      alert("请填写孩子信息");
+      alertMessage("warning", "请填写孩子信息");
+    
     }
 
 });

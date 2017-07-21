@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -28,14 +29,8 @@
 
 
   <form class="form text-center" role="form" >
-
-
     <span class="info-span text-center">点击按钮后，设备将会响铃</span>
-      <button type="button" id="submit" class="saveNum btn">寻找</button>
-
-
-
-
+    <button type="button" id="submit" class="saveNum btn">寻找</button>
   </form>
 
 
@@ -44,6 +39,7 @@
   <script src="/safPhone/js/getUrlParams.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
 
 $(function(){
@@ -67,19 +63,19 @@ $("#submit").click(function(){
      success: function(data){
         console.log(data);
         if(data.rspCode == 1){
-          alert("设备已开始响铃");
+          alertMessage("info", "设备已开始响铃");
         }else if (data.rspCode == 2242){
-          alert("未找到设备");
+          alertMessage("info", "未找到设备");
         }else if (data.rspCode == 2243){
-          alert("设备不在线");
+          alertMessage("info", "设备不在线");
         }else {
-          alert("设备响铃失败！请将下列信息提供给管理人员" + data.rspCode);
-        }
+           alertMessage("danger", "监设备响铃失败，请将此错误码" + data.rspCode + "告诉技术人员");
 
+        }
      },
      error:function(data){
        console.log(data);
-      alert("程序错误！请将下列信息提供给管理人员" + data);
+       alertMessage("danger", "监设备响铃错误！请联系技术人员");
      }
    });//ajax end
 

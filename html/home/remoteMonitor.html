@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/alertMessage.css">
 
 
 </head>
@@ -50,6 +51,7 @@
   <script src="/safPhone/js/getUrlParams.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/alert.js"></script>
 <script>
 
 $(function(){
@@ -77,19 +79,22 @@ $("#submit").click(function(){
       success: function(data){
          console.log(data);
          if(data.rspCode == 1){
-           alert("设备将在两分钟后向" + $("#phoneNumber").val() + "回拨");
-         }else if (data.rspCode == 2242){
-           alert("未找到设备");
-         }else if (data.rspCode == 2243){
-           alert("设备不在线");
-         }else {
-           alert("监听失败！请将下列信息提供给管理人员" + data.rspCode);
-         }
+            alertMessage("info", "设备将在两分钟后向" + $("#phoneNumber").val() + "回拨");
 
+         }else if (data.rspCode == 2242){
+           alertMessage("info", "未找到设备");
+
+         }else if (data.rspCode == 2243){
+           alertMessage("info", "设备不在线");
+
+         }else {
+             alertMessage("danger", "监听失败，请将此错误码" + data.rspCode + "告诉技术人员");
+         }
       },
       error:function(data){
         console.log(data);
-       alert("程序错误！请将下列信息提供给管理人员" + data);
+        alertMessage("danger", "监听错误！请联系技术人员");
+
       }
     });//ajax end
   }
