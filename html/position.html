@@ -224,7 +224,7 @@
     marker.setMap(map);
     setStateBarInfo(latestLocationInfo);
     console.log("aaa");
-  }, 10000);
+  }, 60000);
 
 
 $(function() {
@@ -591,37 +591,50 @@ $("#searchPath").click(function(){
       pathInfo = data;
       if (!$.isEmptyObject(pathInfo)) {
         cleanMap();
-        map.panTo([pathInfo.trackList[0].point.lon, pathInfo.trackList[0].point.lat]);
+        if (pathInfo.trackList.length != 0) {
+          map.panTo([pathInfo.trackList[0].point.lon, pathInfo.trackList[0].point.lat]);
 
-        var path = [];
-        for (var i = 0; i < pathInfo.trackList.length; i++) {
-          path.push([pathInfo.trackList[i].point.lon, pathInfo.trackList[i].point.lat]);
+          var path = [];
+          if ($("#pathType").attr("value") == 2) {
+            for (var i = 0; i < pathInfo.trackList.length; i++) {
+              if (pathInfo.trackList[i].mode != 0) {
+                path.push([pathInfo.trackList[i].point.lon, pathInfo.trackList[i].point.lat]);
+              }
+            }
+          }else {
+            for (var i = 0; i < pathInfo.trackList.length; i++) {
+              path.push([pathInfo.trackList[i].point.lon, pathInfo.trackList[i].point.lat]);
+            }
+          }
+
+          var polyline = new AMap.Polyline({
+            path: path, //设置线覆盖物路径
+            strokeColor: "#3366FF", //线颜色
+            strokeOpacity: 1, //线透明度
+            strokeWeight: 6, //线宽
+            strokeStyle: "dashed ", //线样式
+            lineJoin:"round",
+            strokeDasharray: [10,2,10] , //补充线样式
+            showDir:true
+          });
+          var markerChild = new AMap.Marker({
+              map: map,
+              position: [pathInfo.trackList[0].point.lon, pathInfo.trackList[0].point.lat],
+              icon: "http://webapi.amap.com/images/car.png",
+              content:"<i class='fa fa-child fa-2x'></i>",
+              offset: new AMap.Pixel(-10, -13),
+              autoRotation: false
+          });
+
+          polyline.setMap(map);
+
+          markerChild.setMap(map);
+
+          markerChild.moveAlong(path, 3000);
+        }else {
+          alertMessage("alert alert-info", "设备没有轨迹");
         }
 
-        var polyline = new AMap.Polyline({
-          path: path, //设置线覆盖物路径
-          strokeColor: "#3366FF", //线颜色
-          strokeOpacity: 1, //线透明度
-          strokeWeight: 6, //线宽
-          strokeStyle: "dashed ", //线样式
-          lineJoin:"round",
-          strokeDasharray: [10,2,10] , //补充线样式
-          showDir:true
-        });
-        var markerChild = new AMap.Marker({
-            map: map,
-            position: [pathInfo.trackList[0].point.lon, pathInfo.trackList[0].point.lat],
-            icon: "http://webapi.amap.com/images/car.png",
-            content:"<i class='fa fa-child fa-2x'></i>",
-            offset: new AMap.Pixel(-10, -13),
-            autoRotation: false
-        });
-
-        polyline.setMap(map);
-
-        markerChild.setMap(map);
-
-        markerChild.moveAlong(path, 3000);
 
       }
      },

@@ -110,6 +110,9 @@ $('.clockpicker').clockpicker();
 var url = "http://edu.winsaf.com:9999/edu/deviceMgmt/saveAlarmInfo";
 var checkboxList = $("input[type='checkbox']").not("#switch");
 var requestData = {};
+$("#switch").attr("checked",true);
+$("#display_days").text("每天");
+checkboxList.attr("checked",true);
 
 $(function(){
     $("body").css("opacity",1);
@@ -190,38 +193,41 @@ $(function(){
 });
 
 $("#save").click(function(){
-  if ($("#alarm-time").val() != "") {
-    if ($("#display_days").text() == "") {
-      requestData.repeatMode = 1;
-      requestData.days = "";
-    }
-    requestData.deviceID = $.cookie("deviceID");
-    requestData.alarmTime = $("#alarm-time").val();
-    requestData.enable = $("#switch").get(0).checked ? 1 : 2;
 
-    $.ajax({
-       url: url,
-       type: "POST",
-       contentType: "application/json",
-       headers: {
-              "token" : $.cookie("token"),
-              "userID" : $.cookie("userID")
-          },
-       data:JSON.stringify(requestData),
-       success: function(data){
-          console.log(requestData);
-          console.log(data);
-          if(data.rspCode == 1){
-            window.location.href = "alarmList.html";
-          }else {
-              alertMessage("danger", "保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
-          }
-       },
-       error:function(data){
-         console.log(data);
-         alertMessage("danger", "保存错误！请联系技术人员");
-       }
-     });//ajax end
+  if ($("#alarm-time").val() != "") {
+
+    if ($("input[type='checkbox']:checked").not("#switch").size() == 0) {
+      alertMessage("warning", "请选择重复频率");
+    }else {
+      requestData.deviceID = $.cookie("deviceID");
+      requestData.alarmTime = $("#alarm-time").val();
+      requestData.enable = $("#switch").get(0).checked ? 1 : 2;
+
+      $.ajax({
+         url: url,
+         type: "POST",
+         contentType: "application/json",
+         headers: {
+                "token" : $.cookie("token"),
+                "userID" : $.cookie("userID")
+            },
+         data:JSON.stringify(requestData),
+         success: function(data){
+            console.log(requestData);
+            console.log(data);
+            if(data.rspCode == 1){
+              window.location.href = "alarmList.html";
+            }else {
+                alertMessage("danger", "保存失败，请将此错误码" + data.rspCode + "告诉技术人员");
+            }
+         },
+         error:function(data){
+           console.log(data);
+           alertMessage("danger", "保存错误！请联系技术人员");
+         }
+       });//ajax end
+    }
+
   }else {
     alertMessage("warning", "时间不能为空");
   }
@@ -268,7 +274,7 @@ $("#submit").click(function(){
       }
     }
   }else {
-    days_display = "一次"
+    days_display = ""
   }
 
   $("#display_days").text(days_display);

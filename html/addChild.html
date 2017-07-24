@@ -49,31 +49,36 @@
   <script src="/safPhone/js/alert.js"></script>
   <script>
     $("#submit").click(function(){
-      $.ajax({
-         url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/bindDevice',
-         type: "POST",
-         contentType: "application/json",
-         headers: {
-                "token" : $.cookie("token"),
-                "userID" : $.cookie("userID")
-            },
-         data:JSON.stringify({deviceID : $("#deviceID").val()}),
-         success: function(data){
-            console.log(data);
-            if(data.rspCode == 1){
-              alertMessage("success", "绑定成功",function(){
-                window.location.href="chooseChildren.html";
-              });
+      if ($("#deviceID").val().length <= 15 ){
+          alertMessage("warning", "请输入15位的IMEI号");
+      }else {
+        $.ajax({
+           url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/bindDevice',
+           type: "POST",
+           contentType: "application/json",
+           headers: {
+                  "token" : $.cookie("token"),
+                  "userID" : $.cookie("userID")
+              },
+           data:JSON.stringify({deviceID : $("#deviceID").val()}),
+           success: function(data){
+              console.log(data);
+              if(data.rspCode == 1){
+                alertMessage("success", "绑定成功",function(){
+                  window.location.href="chooseChildren.html";
+                });
 
-            }else {
-                alertMessage("danger", "绑定失败，请将此代码" + data.rspCode + "告诉技术人员");
-            }
-         },
-         error:function(data){
-           console.log(data);
-          alertMessage("danger", "绑定错误！请联系技术人员");
-         }
-       });//ajax end
+              }else {
+                  alertMessage("danger", "绑定失败，请将此代码" + data.rspCode + "告诉技术人员");
+              }
+           },
+           error:function(data){
+             console.log(data);
+            alertMessage("danger", "绑定错误！请联系技术人员");
+           }
+         });//ajax end
+      }
+
 
 
     });

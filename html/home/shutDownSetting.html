@@ -10,6 +10,8 @@
   <title>赛丰智能学生卡</title>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/initialize.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/clockpicker.css">
+  <link rel="stylesheet" type="text/css" href="/safPhone/css/standalone.css">
   <link rel="stylesheet" type="text/css" href="/safPhone/css/font-awesome.min.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/main.css"/>
   <link rel="stylesheet" type="text/css" href="/safPhone/css/switch-button.css" />
@@ -39,10 +41,11 @@
 
   <div class="mine-list">
     <li class="list-group-item">
-      <input id="startUp" type="time" class="time-input"/>
-    <span class="list-item-content-normal">开机时间</span>
 
-      <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
+    <span class="list-item-content-normal">开机时间</span>
+    <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+    <input id="startUp" type="text" class="form-control" value="" placeholder="--:--" readOnly="true" style="padding-top:0px;;border:none;background-color:#FCFCFC;box-shadow:none;font-size:60px;width:100%;height:80px;text-align:center">
+    </div>
 
     </li>
 
@@ -50,10 +53,12 @@
 
   <div class="mine-list">
     <li class="list-group-item">
-      <input id="shutDown" type="time" class="time-input"/>
-    <span class="list-item-content-normal">关机时间</span>
 
-      <i class="fa fa-angle-right fa-lg icon-rightIn-normal"></i>
+    <span class="list-item-content-normal">关机时间</span>
+    <div class="input-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+    <input id="shutDown" type="text" class="form-control" value="" placeholder="--:--" readOnly="true" style="padding-top:0px;;border:none;background-color:#FCFCFC;box-shadow:none;font-size:60px;width:100%;height:80px;text-align:center">
+    </div>
+
     </li>
 
   </div>
@@ -67,8 +72,10 @@
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
   <script src="/safPhone/js/bootstrap.min.js"></script>
+  <script src="/safPhone/js/clockpicker.js"></script>
   <script src="/safPhone/js/alert.js"></script>
 <script>
+$('.clockpicker').clockpicker();
   $(function(){
     $("body").css("opacity",1);
 
@@ -83,7 +90,7 @@
        data:JSON.stringify({deviceID : $.cookie("deviceID")}),
        success: function(data){
           console.log(data);
-
+      
           $("#startUp").val(data.powerOnTime);
           $("#shutDown").val(data.powerOffTime);
           if(data.enable == 1){
@@ -93,13 +100,7 @@
           }
 
        },
-       error:function(XMLHttpRequest, textStatus, errorThrown){
-         console.log(XMLHttpRequest);
-         console.log(textStatus);
-         console.log(errorThrown);
-          alertMessage("danger", "监设备响铃错误！请联系技术人员");
 
-       }
      });//ajax end
      $(".list-group-item").click(function(){
        $(this).children("input").focus();
@@ -125,7 +126,7 @@
             },
          data:JSON.stringify(timingJson),
          success: function(data){
-          alert("保存成功");
+
           alertMessage("success", "保存成功");
 
          },

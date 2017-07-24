@@ -36,8 +36,8 @@
 
 
   <div class="text-center">
-    <a href="alarmSetting.html">
-      <button type="button" class="btn btn-default submit"><i class="fa fa-plus fa-lg"></i> 添加闹钟</button>
+    <a id="alarmSetting" href="alarmSetting.html">
+      <button id="alarmSettingButton" type="button" class="btn btn-default submit"><i class="fa fa-plus fa-lg"></i> 添加闹钟</button>
     </a>
   </div>
 
@@ -67,6 +67,11 @@
             if (data.list != null && data.list != "") {
               for (var i = 0; i < data.list.length; i++) {
                 createAlarmItem(data.list[i]);
+                $("#alarmSetting").attr("href", "#");
+                $("#alarmSettingButton").attr("disabled", "true");
+              }
+              if (data.list.length >= 5) {
+
               }
             }
           }else {

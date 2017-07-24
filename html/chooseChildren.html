@@ -20,7 +20,7 @@
   <nav class="navbar navbar-default text-center navbar-hasList" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-
+        <a href="javascript:window.history.go(-1)"><i class="fa fa-angle-left fa-2x navbar-return"></i></a>
         <span class="navbar-text navbar-title">选择小孩</span>
       </div>
     </div>
@@ -150,7 +150,8 @@
 
 
   function appendChild(child){
-    $("#chooseContent").append("<div><a href='main.html' name='"+ child.childID +"' class='list-group-item children-item'><span>" + child.name + "</span><small>" + child.deviceID  + "</small></a><a class='unbind' data-toggle='modal' data-target='#unbindConfirmModal'>解绑</a></div>");
+    var name = (child.nickname != null && child.nickname != "") ? child.nickname : child.name;
+    $("#chooseContent").append("<div><a href='main.html' name='"+ child.childID +"' class='list-group-item children-item'><span>" + name + "</span></a><a class='unbind' data-toggle='modal' data-target='#unbindConfirmModal'>解绑</a></div>");
   }
 
 </script>

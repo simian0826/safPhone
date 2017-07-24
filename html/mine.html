@@ -34,12 +34,24 @@
     <a href="#" class="list-group-item"><i class="fa fa-question-circle fa-lg list-item-icon"></i>帮助中心</a>
   </div>
   <div class="mine-list">
-    <a href="login.html" target="_parent" class="list-group-item"><i class="fa fa-sign-out fa-lg list-item-icon"></i>退出登陆</a>
+    <a href="#" data-toggle="modal" data-target="#logoutModal" target="_parent" class="list-group-item"><i class="fa fa-sign-out fa-lg list-item-icon"></i>退出登陆</a>
   </div>
 
 
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body">
+              确定要退出登录？
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <button id="logout" type="button" class="btn btn-danger">确定</button>
+            </div>
 
 
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
   <script src="/safPhone/js/jquery.js"></script>
   <script src="/safPhone/js/jquery.cookie.js"></script>
@@ -48,6 +60,10 @@
   <script>
     $(function(){
       $("body").css("opacity",1);
+
+      $("#logout").click(function(){
+        parent.location.href = "login.html";
+      })
     });
   </script>
 

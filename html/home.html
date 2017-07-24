@@ -74,7 +74,7 @@
       <a href="home/remoteSearch.html"><i class="fa fa-search fa-2x"></i><p>寻找设备</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 content-item">
-      <a href="#"><i class="fa fa-phone-square fa-2x"></i><p>设备手机号</p></a>
+      <a id="devicePhoneNum" href="#"><i class="fa fa-phone-square fa-2x"></i><p>设备手机号</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 content-item">
       <a href="home/mute.html"><i class="fa fa-bell-slash fa-2x"></i><p>上课静音</p></a>
@@ -98,6 +98,7 @@
 <script>
   $(function(){
     var childID = $.cookie("childID");
+    var devicePhoneNum =""
     $("body").css("opacity",1);
 
     $(".schoolService").click(function(){
@@ -113,12 +114,19 @@
               "token" : $.cookie("token"),
               "userID" : $.cookie("userID")
           },
+       async: false,
        data:JSON.stringify({childID : childID}),
        success: function(data){
 
           if(data.rspCode == 1){
-            $("#call").attr("href", "tel:" + data.phoneNumber);
-            $("#childName").text(data.name);
+            if (data.phoneNumber != "" && data.phoneNumber != null) {
+              $("#call").attr("href", "tel:" + data.phoneNumber);
+              devicePhoneNum = data.phoneNumber;
+            }else {
+              $("#call").attr("href", "#");
+            }
+            var name = (data.nickname != null && data.nickname != "") ? data.nickname : data.name
+            $("#childName").text(name);
 
           }else {
             alertMessage("danger", "信息获取失败，请将此错误码" + data.rspCode + "告诉技术人员");
@@ -131,6 +139,21 @@
         alertMessage("danger", "信息获取错误！请联系技术人员");
        }
      });//ajax end
+
+     $("#devicePhoneNum").click(function () {
+       if (devicePhoneNum != null && devicePhoneNum != "") {
+         alertMessage("info", devicePhoneNum);
+       }else {
+         alertMessage("info", "您的设备没有录入电话号码");
+       }
+
+     });
+
+     $("#call").click(function() {
+       if ( $("#call").attr("href") == "#") {
+         alertMessage("info", "您的设备没有录入电话号码");
+       }
+     });
   });
 </script>
 

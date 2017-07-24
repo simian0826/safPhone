@@ -61,7 +61,7 @@ $(function(){
 
 $("#submit").click(function(){
   if ($("#phoneNumber").val() == "") {
-    alert("请输入需要回拨的电话号码")
+    alertMessage("warning", "请输入需要回拨的电话号码");
   }else {
     var requestData = {
        deviceID: $.cookie("deviceID"),

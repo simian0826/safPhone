@@ -21,7 +21,7 @@
   <nav class="navbar navbar-default text-center state-bar" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="../guardianship.html.html"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
+        <a href="guardianship.html"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
         <span class="navbar-text navbar-title clearfloat">更多呼入号码</span>
       </div>
     </div>
@@ -32,7 +32,7 @@
 
   </div>
 <div class="text-center" style="width:100%">
-  <a href="incomingNumSetting.html"><button type="button" class="saveNum btn"><i class="fa fa-plus fa-lg"></i> 添加号码</button></a>
+  <a id="incomingNumSetting" href="incomingNumSetting.html"><button id="incomingNumSettingButton" type="button" class="saveNum btn"><i class="fa fa-plus fa-lg"></i> 添加号码</button></a>
 </div>
 
 
@@ -61,6 +61,10 @@
             if(data.list != null){
               for(var i = 0; i < data.list.length; i++){
                 incomingNumItemCreate(data.list[i]);
+              }
+              if(data.list.length >= 10 ){
+                $("#incomingNumSetting").attr("href", "#");
+                $("#incomingNumSettingButton").attr("disabled", "true");
               }
             }
           }else {
