@@ -95,7 +95,7 @@
               appendChild(data.childList[i]);
             }
             $(".children-item").click(function(){
-              $.cookie("deviceID", $(this).children("small").html());
+              $.cookie("deviceID", $(this).attr("deviceID"));
               $.cookie("childID", $(this).attr("name"));
 
             });
@@ -151,7 +151,7 @@
 
   function appendChild(child){
     var name = (child.nickname != null && child.nickname != "") ? child.nickname : child.name;
-    $("#chooseContent").append("<div><a href='main.html' name='"+ child.childID +"' class='list-group-item children-item'><span>" + name + "</span></a><a class='unbind' data-toggle='modal' data-target='#unbindConfirmModal'>解绑</a></div>");
+    $("#chooseContent").append("<div><a href='main.html' name='"+ child.childID +"' deviceID='" + child.deviceID + "' class='list-group-item children-item'><span>" + name + "</span></a><a class='unbind' data-toggle='modal' data-target='#unbindConfirmModal'>解绑</a></div>");
   }
 
 </script>
