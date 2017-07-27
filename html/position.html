@@ -26,7 +26,11 @@
           <span id="location-info" class="location-info"></span>
           <span id="location-time" class="location-time"></span>
         </span>
-        <span id="state-info" class="state-info pull-right"><span id="location-type" class="location-type" ></span><i id="location-battery" class="fa fa-battery-4 fa-lg"></i></span>
+        <span id="state-info" class="state-info pull-right">
+          <i id="location-charge" class="fa fa-plug fa-lg"></i>
+          <span id="location-type" class="location-type" ></span>
+          <i id="location-battery" class="fa fa-battery-4 fa-lg"></i>
+        </span>
       </div>
     </div>
   </nav>
@@ -494,33 +498,53 @@ $("#saveFence").click(function() {
 
 
 $("#locate").click(function(){
-  if(latestLocationInfo.status ==2){
-      alertMessage("alert alert-info", "设备离线");
-  }else {
-    var count = 0;
-      clearInterval(timer);
-    timer = setInterval(function(){
-      getLastLocation();
-      map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
-      marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
-      marker.setMap(map);
-      setStateBarInfo(latestLocationInfo);
-      ++count;
-      if (count == 4) {
-        clearInterval(timer-1);
-        clearInterval(timer);
-        timer = setInterval(function(){
-          getLastLocation();
-          map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
-          marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
-          marker.setMap(map);
-          setStateBarInfo(latestLocationInfo);
+  $.ajax({
+     url: 'http://edu.winsaf.com:9999/edu/deviceMgmt/openPinpoint',
+     type: "POST",
+     contentType: "application/json",
+     async: false,
+     headers: {
+        "token" : $.cookie("token"),
+        "userID" : $.cookie("userID")
+      },
+     data:JSON.stringify({deviceID:  $.cookie("deviceID")}),
+     success: function(data){
+      if(data.rspCode == 1){
+          alertMessage("alert alert-success", "精确定位已启动");
+          var count = 0;
+            clearInterval(timer);
+          timer = setInterval(function(){
+            getLastLocation();
+            map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+            marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+            marker.setMap(map);
+            setStateBarInfo(latestLocationInfo);
+            ++count;
+            if (count == 4) {
+              clearInterval(timer-1);
+              clearInterval(timer);
+              timer = setInterval(function(){
+                getLastLocation();
+                map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+                marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+                marker.setMap(map);
+                setStateBarInfo(latestLocationInfo);
 
-        },60000);
+              },60000);
+            }
+          }, 5000);
+      }else if(data.rspCode == 2242){
+          alertMessage("alert alert-danger", "未找到设备");
+      }else if(data.rspCode == 2243){
+          alertMessage("alert alert-danger", "设备不在线");
       }
-    }, 5000);
+     },
+     error:function(){
+       alertMessage("alert alert-success", "电子围栏保存错误");
+     }
+   });//ajax end
 
-  }
+
 
 });
 
@@ -773,10 +797,11 @@ function drawPath(path) {
 
 
 function setStateBarInfo(data) {
+
   $("#location-info").text(data.address);
   $("#location-time").text(data.time);
   var locationType;
-  switch (data.type) {
+  switch (data.model) {
     case 1:
     locationType = "LBS";
       break;
@@ -804,6 +829,11 @@ function setStateBarInfo(data) {
     case 0:
       $("#location-battery").attr("class", "fa fa-battery-0 fa-lg");
       break;
+  }
+  if (data.charging == 1) {
+    $("#location-charge").attr("class", "fa fa-plug fa-lg");
+  }else {
+    $("#location-charge").attr("class", "");
   }
 
 }

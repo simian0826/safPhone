@@ -110,10 +110,7 @@ $('.clockpicker').clockpicker();
 var url = "http://edu.winsaf.com:9999/edu/deviceMgmt/saveAlarmInfo";
 var checkboxList = $("input[type='checkbox']").not("#switch");
 var requestData = {};
-$("#switch").attr("checked",true);
-$("#display_days").text("每天");
-checkboxList.attr("checked",true);
-requestData.repeatMode = 2;
+
 $(function(){
     $("body").css("opacity",1);
     requestData.deviceID = $.cookie("deviceID");
@@ -189,6 +186,11 @@ $(function(){
       requestData.days = days;
       $("#save").after('<button type="button" id="delete" class="oprateBtn btn">删除</button>');
 
+    }else {
+      $("#switch").attr("checked",true);
+      $("#display_days").text("每天");
+      checkboxList.attr("checked",true);
+      requestData.repeatMode = 2;
     }
 });
 
