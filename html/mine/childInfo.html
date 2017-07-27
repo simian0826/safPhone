@@ -67,14 +67,23 @@ $(function(){
      data:JSON.stringify({childID : $.cookie("childID")}),
      success: function(data){
         if(data.rspCode == 1){
-        $("#childName").text(data.name);
-        $("#childNickName").text(data.nickname);
-        $("#deviceID").text(data.deviceID);
-        $("#phoneNumber").text(data.phoneNumber);
-        $("#expireDate").text(data.expireDate);
-        $("#school").text(data.schoolName);
-        $("#className").text(data.className);
-        $("#studentID").text(data.studentNumber);
+        var childInfo = data;
+        childInfo.name = childInfo.name == null ? "" : childInfo.name;
+        childInfo.nickname = childInfo.nickname == null ? "" : childInfo.nickname;
+        childInfo.deviceID = childInfo.deviceID == null ? "" : childInfo.deviceID;
+        childInfo.phoneNumber = childInfo.phoneNumber == null ? "" : childInfo.phoneNumber;
+        childInfo.expireDate = childInfo.expireDate == null ? "" : childInfo.expireDate;
+        childInfo.schoolName = childInfo.schoolName == null ? "" : childInfo.schoolName;
+        childInfo.name = childInfo.className == null ? "" : childInfo.className;
+        childInfo.name = childInfo.studentNumber == null ? "" : childInfo.studentNumber;
+        $("#childName").text(childInfo.name);
+        $("#childNickName").text(childInfo.nickname);
+        $("#deviceID").text(childInfo.deviceID);
+        $("#phoneNumber").text(childInfo.phoneNumber);
+        $("#expireDate").text(childInfo.expireDate);
+        $("#school").text(childInfo.schoolName);
+        $("#className").text(childInfo.className);
+        $("#studentID").text(childInfo.studentNumber);
 
         }else {
           alertMessage("danger", "信息获取失败，请将此错误码" + data.rspCode + "告诉技术人员");

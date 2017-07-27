@@ -24,7 +24,7 @@
   <nav class="navbar navbar-default text-center state-bar" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a href="javascript:window.history.go(-1)"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
+        <a href="alarmList.html"><i class="fa fa-chevron-left fa-lg navbar-return"></i></a>
         <span class="navbar-text navbar-title clearfloat">闹钟</span>
       </div>
     </div>
@@ -113,7 +113,7 @@ var requestData = {};
 $("#switch").attr("checked",true);
 $("#display_days").text("每天");
 checkboxList.attr("checked",true);
-
+requestData.repeatMode = 2;
 $(function(){
     $("body").css("opacity",1);
     requestData.deviceID = $.cookie("deviceID");

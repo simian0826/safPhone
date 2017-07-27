@@ -67,11 +67,12 @@
             if (data.list != null && data.list != "") {
               for (var i = 0; i < data.list.length; i++) {
                 createAlarmItem(data.list[i]);
-                $("#alarmSetting").attr("href", "#");
-                $("#alarmSettingButton").attr("disabled", "true");
+
+
               }
               if (data.list.length >= 5) {
-
+                $("#alarmSetting").attr("href", "#");
+                $("#alarmSettingButton").attr("disabled", "true");
               }
             }
           }else {
