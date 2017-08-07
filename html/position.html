@@ -204,10 +204,11 @@
       latestLocationInfo = data;
       setStateBarInfo(latestLocationInfo);
       if (!$.isEmptyObject(latestLocationInfo)) {
-        if(!$.isEmptyObject(latestLocationInfo.point)){
+        if(!latestLocationInfo.point){
           mapOption.center = [106.5481624, 29.5150453];
           markerOption.position = [106.5481624, 29.5150453];
         }else{
+          console.log(latestLocationInfo.point);
           mapOption.center = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
           markerOption.position = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
         }
@@ -808,9 +809,17 @@ function drawPath(path) {
 
 
 function setStateBarInfo(data) {
+  if (data.address != null) {
+    $("#location-info").text(data.address);
+  }else {
+      $("#location-info").text("");
+  }
+  if (data.time != null) {
+    $("#location-time").text(data.time);
+  }else {
+      $("#location-time").text("");
+  }
 
-  $("#location-info").text(data.address);
-  $("#location-time").text(data.time);
   var locationType;
   switch (data.model) {
     case 1:
@@ -822,6 +831,8 @@ function setStateBarInfo(data) {
     case 3:
     locationType = "GPS";
       break;
+    default:
+    $("#location-type").hide();
   }
   $("#location-type").text(locationType);
   switch (data.battery) {
