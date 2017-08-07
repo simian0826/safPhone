@@ -207,9 +207,11 @@
         if(!$.isEmptyObject(latestLocationInfo.point)){
           mapOption.center = [106.5481624, 29.5150453];
           markerOption.position = [106.5481624, 29.5150453];
+        }else{
+          mapOption.center = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
+          markerOption.position = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
         }
-        mapOption.center = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
-        markerOption.position = [latestLocationInfo.point.lon, latestLocationInfo.point.lat];
+
       }
      },
      error:function(){
