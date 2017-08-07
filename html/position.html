@@ -230,8 +230,14 @@
 
   timer = setInterval(function(){
     getLastLocation();
-    map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
-    marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+    if (latestLocationInfo.point != null) {
+      map.panTo([latestLocationInfo.point.lon, latestLocationInfo.point.lat]);
+      marker.setPosition([latestLocationInfo.point.lon, latestLocationInfo.point.lat])
+    }else {
+      map.panTo([106.5481624, 29.5150453]);
+      markerOption.position = [106.5481624, 29.5150453];
+    }
+
     marker.setMap(map);
     setStateBarInfo(latestLocationInfo);
     console.log("aaa");
