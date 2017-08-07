@@ -857,6 +857,8 @@ function setStateBarInfo(data) {
     case 0:
       $("#location-battery").attr("class", "fa fa-battery-0 fa-lg");
       break;
+    default:
+    $("#location-battery").hide();
   }
   if (data.charging == 1) {
     $("#location-charge").attr("class", "fa fa-plug fa-lg");
